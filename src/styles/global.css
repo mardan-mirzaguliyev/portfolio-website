@@ -1,0 +1,90 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-surface-50:  250 250 250;
+    --color-surface-100: 244 244 245;
+    --color-surface-200: 228 228 231;
+    --color-surface-800: 39 39 42;
+    --color-surface-900: 24 24 27;
+    --color-surface-950: 9 9 11;
+    --color-accent-400:  167 139 250;
+    --color-accent-500:  139 92 246;
+    --color-accent-600:  124 58 237;
+  }
+
+  html {
+    @apply scroll-smooth antialiased;
+  }
+
+  body {
+    @apply bg-zinc-50 text-zinc-800 font-sans transition-colors duration-300;
+  }
+
+  .dark body {
+    @apply bg-zinc-950 text-zinc-200;
+  }
+
+  ::selection {
+    @apply bg-violet-500/30 text-violet-900 dark:text-violet-100;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-violet-500 rounded-sm;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-violet-600 text-white
+           font-medium text-sm tracking-wide
+           hover:bg-violet-500 active:scale-95
+           transition-all duration-150 ease-in-out
+           focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2
+           dark:focus-visible:ring-offset-zinc-950;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center gap-2 px-4 py-2 rounded-lg
+           text-zinc-600 dark:text-zinc-400
+           hover:bg-zinc-100 dark:hover:bg-zinc-800
+           hover:text-zinc-900 dark:hover:text-zinc-100
+           font-medium text-sm tracking-wide
+           transition-all duration-150 ease-in-out;
+  }
+
+  .tag {
+    @apply inline-block px-2.5 py-0.5 rounded-full text-xs font-medium
+           bg-zinc-100 dark:bg-zinc-800
+           text-zinc-600 dark:text-zinc-400
+           border border-zinc-200 dark:border-zinc-700;
+  }
+
+  .card {
+    @apply rounded-2xl border border-zinc-200 dark:border-zinc-800
+           bg-white dark:bg-zinc-900
+           shadow-sm hover:shadow-md dark:shadow-zinc-900/50
+           transition-all duration-200;
+  }
+
+  .input-field {
+    @apply w-full rounded-lg px-4 py-3
+           bg-white dark:bg-zinc-900
+           border border-zinc-200 dark:border-zinc-700
+           text-zinc-900 dark:text-zinc-100
+           placeholder:text-zinc-400 dark:placeholder:text-zinc-600
+           focus:border-violet-500 dark:focus:border-violet-400
+           focus:ring-2 focus:ring-violet-500/20 dark:focus:ring-violet-400/20
+           transition-colors duration-150
+           text-sm;
+  }
+
+  .section-label {
+    @apply text-xs font-semibold tracking-widest uppercase
+           text-violet-600 dark:text-violet-400;
+  }
+}

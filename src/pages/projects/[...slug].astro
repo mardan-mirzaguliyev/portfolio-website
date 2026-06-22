@@ -1,0 +1,148 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  return projects.map((project) => ({
+    params: { slug: project.slug },
+    props:  { project },
+  }));
+}
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+}
+
+const { project } = Astro.props;
+const { Content }  = await project.render();
+
+const {
+  title,
+  description,
+  pubDate,
+  tags,
+  image,
+  repositoryUrl,
+  liveUrl,
+  featured,
+} = project.data;
+
+const formattedDate = pubDate.toLocaleDateString('en-US', {
+  year: 'numeric', month: 'long', day: 'numeric',
+});
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  image={image}
+  type="article"
+  pubDate={pubDate}
+>
+  <article class="mx-auto max-w-3xl px-6 py-16">
+    <!-- Breadcrumb -->
+    <nav aria-label="Breadcrumb" class="mb-8">
+      <ol class="flex items-center gap-2 text-sm text-zinc-500 dark:text-zinc-400">
+        <li><a href="/" class="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">Home</a></li>
+        <li aria-hidden="true"><span class="text-zinc-300 dark:text-zinc-700">/</span></li>
+        <li><a href="/projects" class="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">Projects</a></li>
+        <li aria-hidden="true"><span class="text-zinc-300 dark:text-zinc-700">/</span></li>
+        <li class="text-zinc-900 dark:text-zinc-100 font-medium truncate max-w-[200px]" aria-current="page">{title}</li>
+      </ol>
+    </nav>
+
+    <!-- Header -->
+    <header class="mb-10">
+      <div class="flex flex-wrap gap-2 mb-4">
+        {tags.map((tag) => <span class="tag">{tag}</span>)}
+        {featured && (
+          <span class="tag border-violet-300 dark:border-violet-700 bg-violet-50 dark:bg-violet-950/60 text-violet-600 dark:text-violet-400">
+            Featured
+          </span>
+        )}
+      </div>
+
+      <h1 class="text-3xl sm:text-4xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight leading-tight mb-4">
+        {title}
+      </h1>
+
+      <p class="text-lg text-zinc-500 dark:text-zinc-400 leading-relaxed mb-6">
+        {description}
+      </p>
+
+      <!-- Meta row -->
+      <div class="flex flex-wrap items-center gap-4 py-4 border-y border-zinc-200 dark:border-zinc-800">
+        <time datetime={pubDate.toISOString()} class="text-sm text-zinc-500 dark:text-zinc-400">
+          {formattedDate}
+        </time>
+
+        <div class="flex items-center gap-3 ml-auto">
+          {repositoryUrl && (
+            <a
+              href={repositoryUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn-ghost text-xs py-1.5 px-3"
+            >
+              <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
+              </svg>
+              Source
+            </a>
+          )}
+          {liveUrl && (
+            <a
+              href={liveUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn-primary text-xs py-1.5 px-3"
+            >
+              <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                <polyline points="15 3 21 3 21 9" />
+                <line x1="10" y1="14" x2="21" y2="3" />
+              </svg>
+              Live demo
+            </a>
+          )}
+        </div>
+      </div>
+    </header>
+
+    <!-- Hero image -->
+    {image && (
+      <div class="mb-10 rounded-2xl overflow-hidden border border-zinc-200 dark:border-zinc-800 aspect-video bg-zinc-100 dark:bg-zinc-800">
+        <img
+          src={image}
+          alt={`${title} screenshot`}
+          class="w-full h-full object-cover"
+          loading="eager"
+          decoding="async"
+        />
+      </div>
+    )}
+
+    <!-- MDX/Markdown body -->
+    <div class="prose prose-zinc dark:prose-invert max-w-none
+                prose-headings:font-bold prose-headings:tracking-tight
+                prose-a:text-violet-600 dark:prose-a:text-violet-400
+                prose-a:no-underline hover:prose-a:underline
+                prose-code:font-mono prose-code:text-sm
+                prose-pre:rounded-xl prose-pre:border prose-pre:border-zinc-200 dark:prose-pre:border-zinc-700
+                prose-img:rounded-xl prose-img:border prose-img:border-zinc-200 dark:prose-img:border-zinc-700
+                prose-table:text-sm">
+      <Content />
+    </div>
+
+    <!-- Back link -->
+    <div class="mt-14 pt-8 border-t border-zinc-200 dark:border-zinc-800">
+      <a href="/projects" class="btn-ghost">
+        <svg class="h-4 w-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M13 8H3M7 4l-4 4 4 4" />
+        </svg>
+        All projects
+      </a>
+    </div>
+  </article>
+</BaseLayout>

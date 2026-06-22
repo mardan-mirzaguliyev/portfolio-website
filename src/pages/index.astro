@@ -1,0 +1,100 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+
+const allProjects = await getCollection('projects');
+const featured = allProjects
+  .filter((p) => p.data.featured)
+  .sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
+---
+
+<BaseLayout title="Home">
+  <!-- ─── HERO ─────────────────────────────────────────────── -->
+  <section class="mx-auto max-w-5xl px-6 pt-20 pb-24 sm:pt-28 sm:pb-32">
+    <div class="max-w-2xl animate-fade-up">
+      <p class="section-label mb-4">Available for new projects</p>
+
+      <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100 leading-[1.1]">
+        Hi, I'm Mardan.<br />
+        <span class="text-violet-500">I build things</span><br />
+        for the web.
+      </h1>
+
+      <p class="mt-6 text-lg text-zinc-500 dark:text-zinc-400 leading-relaxed max-w-xl">
+        Frontend Engineer with a love for data visualisation, performance, and open-source tooling.
+        I turn complex data into clear, interactive experiences that people actually enjoy using.
+      </p>
+
+      <div class="mt-8 flex flex-wrap items-center gap-4">
+        <a href="/projects" class="btn-primary">
+          View my work
+          <svg class="h-4 w-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M3 8h10M9 4l4 4-4 4" />
+          </svg>
+        </a>
+        <a href="/contact" class="btn-ghost">
+          Get in touch
+        </a>
+      </div>
+
+      <!-- Tech badges -->
+      <div class="mt-10 flex flex-wrap gap-2" aria-label="Technologies I work with">
+        {['Astro', 'React', 'TypeScript', 'Node.js', 'R', 'Tailwind CSS', 'PostgreSQL'].map((t) => (
+          <span class="tag">{t}</span>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── SELECTED PROJECTS ─────────────────────────────────── -->
+  <section class="mx-auto max-w-5xl px-6 pb-24">
+    <div class="flex items-center justify-between mb-10">
+      <div>
+        <p class="section-label mb-1">Portfolio</p>
+        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">Selected projects</h2>
+      </div>
+      <a href="/projects" class="btn-ghost hidden sm:inline-flex">
+        All projects
+        <svg class="h-3.5 w-3.5" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M3 8h10M9 4l4 4-4 4" />
+        </svg>
+      </a>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {featured.map((project) => (
+        <ProjectCard
+          title={project.data.title}
+          description={project.data.description}
+          tags={project.data.tags}
+          href={`/projects/${project.slug}`}
+          image={project.data.image}
+          liveUrl={project.data.liveUrl}
+          repositoryUrl={project.data.repositoryUrl}
+          featured={project.data.featured}
+        />
+      ))}
+    </div>
+
+    <div class="mt-8 sm:hidden text-center">
+      <a href="/projects" class="btn-ghost">All projects →</a>
+    </div>
+  </section>
+
+  <!-- ─── CONTACT CTA ────────────────────────────────────────── -->
+  <section class="mx-auto max-w-5xl px-6 pb-24">
+    <div class="rounded-3xl bg-gradient-to-br from-violet-600 to-violet-800 dark:from-violet-700 dark:to-violet-950 p-10 sm:p-14 text-center">
+      <h2 class="text-2xl sm:text-3xl font-bold text-white mb-3">Let's work together</h2>
+      <p class="text-violet-200 text-base sm:text-lg max-w-md mx-auto mb-8 leading-relaxed">
+        Have a project in mind? I'm open to freelance, contract, and full-time opportunities.
+      </p>
+      <a href="/contact" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white text-violet-700 font-semibold text-sm hover:bg-violet-50 active:scale-95 transition-all duration-150">
+        Start a conversation
+        <svg class="h-4 w-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M3 8h10M9 4l4 4-4 4" />
+        </svg>
+      </a>
+    </div>
+  </section>
+</BaseLayout>

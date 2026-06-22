@@ -1,0 +1,109 @@
+---
+import ThemeToggle from './ThemeToggle.astro';
+
+const navLinks = [
+  { label: 'Projects', href: '/projects' },
+  { label: 'Blog',     href: '/blog'     },
+  { label: 'Contact',  href: '/contact'  },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<header class="sticky top-0 z-50 w-full border-b border-zinc-200/60 dark:border-zinc-800/60 bg-zinc-50/80 dark:bg-zinc-950/80 backdrop-blur-md">
+  <nav class="mx-auto flex max-w-5xl items-center justify-between px-6 py-4" aria-label="Main navigation">
+    <!-- Wordmark / Logo -->
+    <a
+      href="/"
+      class="font-semibold text-zinc-900 dark:text-zinc-100 tracking-tight hover:text-violet-600 dark:hover:text-violet-400 transition-colors duration-150"
+      aria-label="Home"
+    >
+      mardan<span class="text-violet-500">.</span>dev
+    </a>
+
+    <!-- Desktop links -->
+    <ul class="hidden sm:flex items-center gap-1" role="list">
+      {navLinks.map(({ label, href }) => {
+        const isActive = currentPath === href || currentPath.startsWith(href + '/');
+        return (
+          <li>
+            <a
+              href={href}
+              class:list={[
+                'px-3 py-1.5 rounded-md text-sm font-medium transition-colors duration-150',
+                isActive
+                  ? 'text-violet-600 dark:text-violet-400 bg-violet-50 dark:bg-violet-950/50'
+                  : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800',
+              ]}
+              aria-current={isActive ? 'page' : undefined}
+            >
+              {label}
+            </a>
+          </li>
+        );
+      })}
+    </ul>
+
+    <div class="flex items-center gap-2">
+      <ThemeToggle />
+
+      <!-- Mobile menu button -->
+      <button
+        id="mobile-menu-btn"
+        class="sm:hidden flex h-9 w-9 items-center justify-center rounded-lg text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+        aria-label="Open menu"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+      >
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+          <path id="menu-icon-open"  stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+          <path id="menu-icon-close" stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" class="hidden" />
+        </svg>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile menu -->
+  <div
+    id="mobile-menu"
+    class="hidden sm:hidden border-t border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 px-6 pb-4"
+    role="navigation"
+    aria-label="Mobile navigation"
+  >
+    <ul class="flex flex-col gap-1 pt-3" role="list">
+      {navLinks.map(({ label, href }) => {
+        const isActive = currentPath === href || currentPath.startsWith(href + '/');
+        return (
+          <li>
+            <a
+              href={href}
+              class:list={[
+                'block px-3 py-2 rounded-md text-sm font-medium transition-colors duration-150',
+                isActive
+                  ? 'text-violet-600 dark:text-violet-400 bg-violet-50 dark:bg-violet-950/50'
+                  : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800',
+              ]}
+            >
+              {label}
+            </a>
+          </li>
+        );
+      })}
+    </ul>
+  </div>
+</header>
+
+<script>
+  const btn  = document.getElementById('mobile-menu-btn')!;
+  const menu = document.getElementById('mobile-menu')!;
+  const open  = document.getElementById('menu-icon-open')!;
+  const close = document.getElementById('menu-icon-close')!;
+
+  btn.addEventListener('click', () => {
+    const expanded = btn.getAttribute('aria-expanded') === 'true';
+    btn.setAttribute('aria-expanded', String(!expanded));
+    menu.classList.toggle('hidden');
+    open.classList.toggle('hidden');
+    close.classList.toggle('hidden');
+  });
+</script>
