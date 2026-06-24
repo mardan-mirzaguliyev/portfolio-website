@@ -4,7 +4,6 @@ interface Props {
   description: string;
   tags: string[];
   href: string;
-  image?: string;
   liveUrl?: string;
   repositoryUrl?: string;
   featured?: boolean;
@@ -13,9 +12,14 @@ interface Props {
 
 const {
   title, description, tags, href,
-  image, liveUrl, repositoryUrl, featured,
+  liveUrl, repositoryUrl, featured,
   size = 'default',
 } = Astro.props;
+
+// Primary destination: external liveUrl takes precedence over the internal slug page
+const primaryHref   = liveUrl ?? href;
+const primaryTarget = liveUrl ? '_blank' : undefined;
+const primaryRel    = liveUrl ? 'noopener noreferrer' : undefined;
 
 // Map tech stacks to distinct colour classes — full strings so Tailwind detects them
 const TAG_COLORS: Record<string, string> = {
@@ -57,61 +61,44 @@ const isLarge = size === 'large';
   featured && 'ring-1 ring-violet-500/20 dark:ring-violet-400/20',
 ]}>
 
-  <!-- ── Thumbnail / placeholder ─────────────────────────── -->
+  <!-- ── Thumbnail placeholder ──────────────────────────── -->
   <a
-    href={href}
+    href={primaryHref}
+    target={primaryTarget}
+    rel={primaryRel}
     tabindex="-1"
     aria-hidden="true"
     class:list={[
-      'block relative overflow-hidden shrink-0',
+      'block relative overflow-hidden shrink-0 bg-gradient-to-br from-indigo-900/40 via-purple-900/20 to-zinc-900',
       isLarge
         ? 'aspect-video sm:aspect-auto sm:w-2/5 sm:self-stretch'
         : 'aspect-video',
-      image
-        ? 'bg-zinc-100 dark:bg-zinc-900'
-        : 'bg-gradient-to-br from-indigo-900/40 via-purple-900/20 to-zinc-900',
     ]}
   >
-    {image ? (
-      <img
-        src={image}
-        alt=""
-        class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
-        loading="lazy"
-        decoding="async"
-      />
-    ) : (
-      <>
-        {/* Subtle CSS grid overlay */}
-        <div class="absolute inset-0 opacity-[0.07]"
-             style="background-image: linear-gradient(to right, rgb(167 139 250 / 1) 1px, transparent 1px), linear-gradient(to bottom, rgb(167 139 250 / 1) 1px, transparent 1px); background-size: 32px 32px;"></div>
-        <div class="absolute inset-0 flex flex-col items-center justify-center gap-3">
-          {/* Animated radial glow */}
-          <div class:list={[
-            'absolute rounded-full bg-violet-500/20 blur-3xl transition-all duration-500 group-hover:bg-violet-500/30',
-            isLarge ? 'h-48 w-48' : 'h-28 w-28',
-          ]}></div>
-          <span class:list={[
-            'relative font-extrabold text-violet-300/25 select-none tracking-tight group-hover:text-violet-300/40 transition-colors duration-300',
-            isLarge ? 'text-[7rem]' : 'text-5xl',
-          ]}>
-            {title.charAt(0)}
-          </span>
-          {tags[0] && (
-            <span class="relative text-[10px] font-semibold tracking-widest uppercase px-2.5 py-1 rounded-full
-                         bg-violet-500/15 text-violet-300/70 border border-violet-400/20
-                         group-hover:bg-violet-500/25 group-hover:text-violet-300/90 transition-all duration-300">
-              {tags[0]}
-            </span>
-          )}
-        </div>
-      </>
-    )}
+    {/* Subtle CSS grid overlay */}
+    <div class="absolute inset-0 opacity-[0.07]"
+         style="background-image: linear-gradient(to right, rgb(167 139 250 / 1) 1px, transparent 1px), linear-gradient(to bottom, rgb(167 139 250 / 1) 1px, transparent 1px); background-size: 32px 32px;"></div>
 
-    <!-- Depth gradient overlay on image hover -->
-    {image && (
-      <div class="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-    )}
+    <div class="absolute inset-0 flex flex-col items-center justify-center gap-3">
+      {/* Animated radial glow */}
+      <div class:list={[
+        'absolute rounded-full bg-violet-500/20 blur-3xl transition-all duration-500 group-hover:bg-violet-500/30',
+        isLarge ? 'h-48 w-48' : 'h-28 w-28',
+      ]}></div>
+      <span class:list={[
+        'relative font-extrabold text-violet-300/25 select-none tracking-tight group-hover:text-violet-300/40 transition-colors duration-300',
+        isLarge ? 'text-[7rem]' : 'text-5xl',
+      ]}>
+        {title.charAt(0)}
+      </span>
+      {tags[0] && (
+        <span class="relative text-[10px] font-semibold tracking-widest uppercase px-2.5 py-1 rounded-full
+                     bg-violet-500/15 text-violet-300/70 border border-violet-400/20
+                     group-hover:bg-violet-500/25 group-hover:text-violet-300/90 transition-all duration-300">
+          {tags[0]}
+        </span>
+      )}
+    </div>
   </a>
 
   <!-- ── Card body ────────────────────────────────────────── -->
@@ -119,7 +106,7 @@ const isLarge = size === 'large';
 
     <!-- Title row -->
     <div class="flex items-start justify-between gap-2">
-      <a href={href} class="group/title min-w-0">
+      <a href={primaryHref} target={primaryTarget} rel={primaryRel} class="group/title min-w-0">
         <h2 class:list={[
           'font-bold text-zinc-900 dark:text-zinc-50',
           'group-hover/title:text-violet-600 dark:group-hover/title:text-violet-300',
@@ -156,12 +143,14 @@ const isLarge = size === 'large';
     <!-- Action row -->
     <div class="flex items-center gap-3 pt-2 border-t border-zinc-100/80 dark:border-white/[0.06]">
       <a
-        href={href}
+        href={primaryHref}
+        target={primaryTarget}
+        rel={primaryRel}
         class="link-underline text-sm font-semibold text-violet-600 dark:text-violet-400
                hover:text-violet-500 dark:hover:text-violet-300
                flex items-center gap-1.5 transition-colors duration-150"
       >
-        Case study
+        {liveUrl ? 'View project' : 'Case study'}
         <svg class="h-3.5 w-3.5 translate-x-0 group-hover:translate-x-0.5 transition-transform duration-150"
              viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"
              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -183,29 +172,6 @@ const isLarge = size === 'large';
         >
           <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
-          </svg>
-        </a>
-      )}
-
-      {liveUrl && (
-        <a
-          href={liveUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={`${title} live demo`}
-          class:list={[
-            'flex h-7 w-7 items-center justify-center rounded-lg',
-            'text-zinc-400 dark:text-zinc-600',
-            'hover:text-zinc-700 dark:hover:text-zinc-200',
-            'hover:bg-zinc-100 dark:hover:bg-white/[0.08]',
-            'transition-all duration-150',
-            !repositoryUrl && 'ml-auto',
-          ]}
-        >
-          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-            <polyline points="15 3 21 3 21 9" />
-            <line x1="10" y1="14" x2="21" y2="3" />
           </svg>
         </a>
       )}

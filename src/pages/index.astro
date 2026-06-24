@@ -6,7 +6,7 @@ import ProjectCard from '../components/ProjectCard.astro';
 const allProjects = await getCollection('projects');
 const featured = allProjects
   .filter((p) => p.data.featured)
-  .sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
+  .sort((a, b) => a.data.title.localeCompare(b.data.title));
 ---
 
 <BaseLayout title="Home">
@@ -104,7 +104,6 @@ const featured = allProjects
             description={project.data.description}
             tags={project.data.tags}
             href={`/projects/${project.slug}`}
-            image={project.data.image}
             liveUrl={project.data.liveUrl}
             repositoryUrl={project.data.repositoryUrl}
             featured={project.data.featured}

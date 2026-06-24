@@ -1,12 +1,10 @@
 ---
 title: "Randomify"
 description: "A full-stack MERN application that generates curated random content — quotes, colors, music, and images — powered by a custom recommendation engine that learns from user preferences."
-pubDate: 2023-11-20
-tags: ["MongoDB", "Express", "React", "Node.js", "MERN", "REST API"]
-repositoryUrl: "https://github.com/yourusername/randomify"
-liveUrl: "https://randomify.example.com"
 featured: true
-order: 3
+tags: ["MongoDB", "Express", "React", "Node.js", "MERN", "REST API"]
+liveUrl: "https://randomify.example.com"
+repositoryUrl: "https://github.com/yourusername/randomify"
 ---
 
 ## Overview

@@ -1,12 +1,10 @@
 ---
 title: "The Narratives in Graphs"
 description: "An interactive data visualization platform that transforms complex datasets into compelling visual narratives, enabling non-technical stakeholders to explore insights through storytelling."
-pubDate: 2024-03-15
-tags: ["R", "ggplot2", "Shiny", "Data Science", "Visualization"]
-repositoryUrl: "https://github.com/yourusername/the_narratives_in_graphs"
-liveUrl: "https://narratives.example.com"
 featured: true
-order: 1
+tags: ["R", "ggplot2", "Shiny", "Data Science", "Visualization"]
+liveUrl: "https://narratives.example.com"
+repositoryUrl: "https://github.com/yourusername/the_narratives_in_graphs"
 ---
 
 ## Overview
