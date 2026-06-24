@@ -4,7 +4,7 @@ description: "Text mining and Sentiment Analysis of artistic materials."
 featured: true
 tags: ["R", "ggplot2", "Sentiment Analysis", "Text Mining",  "Data Science", "Visualization"]
 liveUrl: "https://thenarrativesingraphs.substack.com/"
-logo: "../../assets/01-narratives-in-graphs-logo.png.png"
+logo: "../../assets/01-narratives-in-graphs-logo.png"
 ---
 
 
