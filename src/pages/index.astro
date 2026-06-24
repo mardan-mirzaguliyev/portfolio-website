@@ -10,23 +10,42 @@ const featured = allProjects
 ---
 
 <BaseLayout title="Home">
-  <!-- ─── HERO ─────────────────────────────────────────────── -->
-  <section class="mx-auto max-w-5xl px-6 pt-20 pb-24 sm:pt-28 sm:pb-32">
-    <div class="max-w-2xl animate-fade-up">
-      <p class="section-label mb-4">Available for new projects</p>
 
-      <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100 leading-[1.1]">
-        Hi, I'm Mardan.<br />
-        <span class="text-violet-500">I build things</span><br />
-        for the web.
+  <!-- ─── HERO ──────────────────────────────────────────────── -->
+  <section class="relative mx-auto max-w-5xl px-6 pt-24 pb-28 sm:pt-32 sm:pb-36">
+
+    <!-- Hero-local glow for extra punch — sits behind the text -->
+    <div aria-hidden="true" class="pointer-events-none absolute inset-0 overflow-hidden -z-10">
+      <div class="absolute -top-20 -left-10 h-[460px] w-[640px] rounded-full bg-violet-600/[0.08] blur-[100px]"></div>
+    </div>
+
+    <div class="max-w-2xl animate-fade-up">
+
+      <!-- Status pill -->
+      <div class="inline-flex items-center gap-2 mb-6 px-3 py-1.5 rounded-full
+                  bg-emerald-500/10 border border-emerald-500/20
+                  text-emerald-600 dark:text-emerald-400 text-xs font-semibold tracking-wide">
+        <span class="relative flex h-1.5 w-1.5">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+          <span class="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+        </span>
+        Available for new projects
+      </div>
+
+      <!-- Headline — gradient on the punchy line -->
+      <h1 class="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.05]">
+        <span class="text-zinc-900 dark:text-zinc-50 block">Hi, I'm Mardan.</span>
+        <span class="gradient-text block mt-1">I build things</span>
+        <span class="text-zinc-900 dark:text-zinc-50 block">for the web.</span>
       </h1>
 
-      <p class="mt-6 text-lg text-zinc-500 dark:text-zinc-400 leading-relaxed max-w-xl">
+      <p class="mt-7 text-lg text-zinc-500 dark:text-zinc-400 leading-relaxed max-w-xl">
         Frontend Engineer with a love for data visualisation, performance, and open-source tooling.
         I turn complex data into clear, interactive experiences that people actually enjoy using.
       </p>
 
-      <div class="mt-8 flex flex-wrap items-center gap-4">
+      <!-- CTA row -->
+      <div class="mt-9 flex flex-wrap items-center gap-4">
         <a href="/projects" class="btn-primary">
           View my work
           <svg class="h-4 w-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -38,21 +57,27 @@ const featured = allProjects
         </a>
       </div>
 
-      <!-- Tech badges -->
-      <div class="mt-10 flex flex-wrap gap-2" aria-label="Technologies I work with">
-        {['Astro', 'React', 'TypeScript', 'Node.js', 'R', 'Tailwind CSS', 'PostgreSQL'].map((t) => (
-          <span class="tag">{t}</span>
-        ))}
+      <!-- Tech badges — coloured by category -->
+      <div class="mt-10 mb-8 flex flex-wrap gap-2" aria-label="Technologies I work with">
+        <span class="bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-500/25 inline-block px-2.5 py-0.5 rounded-full text-xs font-medium border">Astro</span>
+        <span class="bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border-cyan-500/25 inline-block px-2.5 py-0.5 rounded-full text-xs font-medium border">React</span>
+        <span class="bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/25 inline-block px-2.5 py-0.5 rounded-full text-xs font-medium border">TypeScript</span>
+        <span class="bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/25 inline-block px-2.5 py-0.5 rounded-full text-xs font-medium border">Node.js</span>
+        <span class="bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/25 inline-block px-2.5 py-0.5 rounded-full text-xs font-medium border">R</span>
+        <span class="bg-sky-500/10 text-sky-600 dark:text-sky-400 border-sky-500/25 inline-block px-2.5 py-0.5 rounded-full text-xs font-medium border">Tailwind CSS</span>
+        <span class="bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border-indigo-500/25 inline-block px-2.5 py-0.5 rounded-full text-xs font-medium border">PostgreSQL</span>
       </div>
     </div>
   </section>
 
-  <!-- ─── SELECTED PROJECTS ─────────────────────────────────── -->
-  <section class="mx-auto max-w-5xl px-6 pb-24">
-    <div class="flex items-center justify-between mb-10">
+  <!-- ─── SELECTED PROJECTS — Bento grid ──────────────────── -->
+  <section class="mx-auto max-w-5xl px-6 pb-28 sm:pb-32">
+    <div class="flex items-end justify-between mb-10">
       <div>
-        <p class="section-label mb-1">Portfolio</p>
-        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">Selected projects</h2>
+        <p class="section-label mb-2">Portfolio</p>
+        <h2 class="text-2xl sm:text-3xl font-bold text-zinc-900 dark:text-zinc-50 tracking-tight">
+          Selected projects
+        </h2>
       </div>
       <a href="/projects" class="btn-ghost hidden sm:inline-flex">
         All projects
@@ -62,18 +87,30 @@ const featured = allProjects
       </a>
     </div>
 
-    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      {featured.map((project) => (
-        <ProjectCard
-          title={project.data.title}
-          description={project.data.description}
-          tags={project.data.tags}
-          href={`/projects/${project.slug}`}
-          image={project.data.image}
-          liveUrl={project.data.liveUrl}
-          repositoryUrl={project.data.repositoryUrl}
-          featured={project.data.featured}
-        />
+    <!--
+      Asymmetric bento layout:
+        mobile: stacked
+        sm:     first card full-width, two below it side by side
+        lg:     first card 2/3 wide × 2 rows tall; two cards stack in the right 1/3 column
+    -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:[grid-template-rows:repeat(2,minmax(260px,auto))]">
+      {featured.map((project, i) => (
+        <div class:list={[
+          'flex',
+          i === 0 && 'sm:col-span-2 lg:col-span-2 lg:row-span-2',
+        ]}>
+          <ProjectCard
+            title={project.data.title}
+            description={project.data.description}
+            tags={project.data.tags}
+            href={`/projects/${project.slug}`}
+            image={project.data.image}
+            liveUrl={project.data.liveUrl}
+            repositoryUrl={project.data.repositoryUrl}
+            featured={project.data.featured}
+            size={i === 0 ? 'large' : 'default'}
+          />
+        </div>
       ))}
     </div>
 
@@ -82,19 +119,48 @@ const featured = allProjects
     </div>
   </section>
 
-  <!-- ─── CONTACT CTA ────────────────────────────────────────── -->
-  <section class="mx-auto max-w-5xl px-6 pb-24">
-    <div class="rounded-3xl bg-gradient-to-br from-violet-600 to-violet-800 dark:from-violet-700 dark:to-violet-950 p-10 sm:p-14 text-center">
-      <h2 class="text-2xl sm:text-3xl font-bold text-white mb-3">Let's work together</h2>
-      <p class="text-violet-200 text-base sm:text-lg max-w-md mx-auto mb-8 leading-relaxed">
-        Have a project in mind? I'm open to freelance, contract, and full-time opportunities.
-      </p>
-      <a href="/contact" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white text-violet-700 font-semibold text-sm hover:bg-violet-50 active:scale-95 transition-all duration-150">
-        Start a conversation
-        <svg class="h-4 w-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M3 8h10M9 4l4 4-4 4" />
-        </svg>
-      </a>
+  <!-- ─── CONTACT CTA — glass + gradient ──────────────────── -->
+  <section class="mx-auto max-w-5xl px-6 pb-28 sm:pb-32">
+    <div class="
+      relative rounded-3xl overflow-hidden text-center
+      px-10 py-14 sm:px-16 sm:py-20
+      bg-gradient-to-br from-violet-950/70 via-indigo-950/60 to-zinc-950/80
+      dark:from-violet-950/80 dark:via-indigo-950/70 dark:to-zinc-950/90
+      border border-white/10 dark:border-white/[0.08]
+      backdrop-blur-sm
+    ">
+      <!-- Inner radial glow -->
+      <div aria-hidden="true" class="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 h-[300px] w-[500px] rounded-full bg-violet-500/20 blur-[80px]"></div>
+      <!-- Gradient shimmer line across top -->
+      <div aria-hidden="true" class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-violet-400/40 to-transparent"></div>
+
+      <div class="relative">
+        <p class="text-xs font-semibold tracking-widest uppercase text-violet-400/70 mb-3">
+          Open to work
+        </p>
+        <h2 class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight mb-4">
+          Let's build something great
+        </h2>
+        <p class="text-violet-200/70 text-base sm:text-lg max-w-lg mx-auto mb-10 leading-relaxed">
+          Have a project in mind? I'm open to freelance, contract, and full-time opportunities globally.
+        </p>
+        <a
+          href="/contact"
+          class="
+            inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl
+            bg-white text-violet-700 font-semibold text-sm
+            hover:bg-violet-50 hover:shadow-glow-sm
+            active:scale-[0.97]
+            transition-all duration-200
+          "
+        >
+          Start a conversation
+          <svg class="h-4 w-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M3 8h10M9 4l4 4-4 4" />
+          </svg>
+        </a>
+      </div>
     </div>
   </section>
+
 </BaseLayout>

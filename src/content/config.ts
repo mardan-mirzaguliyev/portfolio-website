@@ -7,7 +7,7 @@ const projects = defineCollection({
     description: z.string(),
     pubDate: z.coerce.date(),
     tags: z.array(z.string()),
-    image: z.string(),
+    image: z.string().optional(),
     repositoryUrl: z.string().url().optional(),
     liveUrl: z.string().url().optional(),
     featured: z.boolean().default(false),

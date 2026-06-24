@@ -6,63 +6,84 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   title="Contact"
   description="Get in touch with Mardan Mirzaguliyev — open to freelance, contract, and full-time opportunities."
 >
-  <section class="mx-auto max-w-5xl px-6 py-16">
-    <div class="grid lg:grid-cols-2 gap-16 items-start">
+  <section class="relative mx-auto max-w-5xl px-6 py-20 sm:py-28">
 
-      <!-- Left: copy -->
+    <!-- Background glow -->
+    <div aria-hidden="true" class="pointer-events-none absolute inset-0 overflow-hidden -z-10">
+      <div class="absolute top-0 right-0 h-[400px] w-[500px] rounded-full bg-violet-600/[0.07] blur-[100px]"></div>
+      <div class="absolute bottom-0 left-0 h-[300px] w-[400px] rounded-full bg-indigo-600/[0.05] blur-[90px]"></div>
+    </div>
+
+    <div class="grid lg:grid-cols-2 gap-14 lg:gap-20 items-start">
+
+      <!-- ── Left: copy ───────────────────────────────────── -->
       <div>
-        <p class="section-label mb-3">Contact</p>
-        <h1 class="text-3xl sm:text-4xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight mb-5">
-          Let's work together
+        <p class="section-label mb-4">Contact</p>
+        <h1 class="text-4xl sm:text-5xl font-extrabold text-zinc-900 dark:text-zinc-50 tracking-tight leading-tight mb-6">
+          Let's work<br />
+          <span class="gradient-text">together.</span>
         </h1>
-        <p class="text-zinc-500 dark:text-zinc-400 text-base leading-relaxed mb-8">
+        <p class="text-zinc-500 dark:text-zinc-400 text-base leading-relaxed mb-8 max-w-md">
           Whether you have a project in mind, want to discuss a role, or just want to say hi —
           my inbox is open. I typically respond within 24 hours.
         </p>
 
         <!-- Availability indicator -->
-        <div class="flex items-center gap-3 mb-8 p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800">
-          <span class="relative flex h-2.5 w-2.5">
+        <div class="inline-flex items-center gap-3 mb-8 px-4 py-3 rounded-xl
+                    bg-emerald-500/8 dark:bg-emerald-500/[0.07]
+                    border border-emerald-500/20 dark:border-emerald-500/15">
+          <span class="relative flex h-2 w-2">
             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+            <span class="relative inline-flex h-2 w-2 rounded-full bg-emerald-500"></span>
           </span>
-          <p class="text-sm font-medium text-emerald-700 dark:text-emerald-400">
+          <p class="text-sm font-semibold text-emerald-700 dark:text-emerald-400">
             Currently available for new projects
           </p>
         </div>
 
         <!-- Quick info -->
-        <ul class="space-y-3 text-sm text-zinc-500 dark:text-zinc-400">
-          <li class="flex items-center gap-3">
-            <svg class="h-4 w-4 text-violet-500 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" />
-            </svg>
-            Based in Azerbaijan — available remotely worldwide
-          </li>
-          <li class="flex items-center gap-3">
-            <svg class="h-4 w-4 text-violet-500 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <rect x="2" y="3" width="20" height="14" rx="2" /><polyline points="8 21 12 17 16 21" /><line x1="12" y1="17" x2="12" y2="21" />
-            </svg>
-            Open to frontend, full-stack, and data-vis contracts
-          </li>
-          <li class="flex items-center gap-3">
-            <svg class="h-4 w-4 text-violet-500 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.15 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.06 1.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.09 9.11A16 16 0 0 0 13 15.05l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21 16l.92.92z" />
-            </svg>
-            Typical response time: &lt; 24 hours
-          </li>
+        <ul class="space-y-4">
+          {[
+            {
+              icon: `<path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>`,
+              text: 'Based in Azerbaijan — available remotely worldwide',
+            },
+            {
+              icon: `<rect x="2" y="3" width="20" height="14" rx="2"/><polyline points="8 21 12 17 16 21"/><line x1="12" y1="17" x2="12" y2="21"/>`,
+              text: 'Open to frontend, full-stack, and data-vis contracts',
+            },
+            {
+              icon: `<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.15 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.06 1.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.09 9.11A16 16 0 0 0 13 15.05l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21 16l.92.92z"/>`,
+              text: 'Typical response time: < 24 hours',
+            },
+          ].map(({ icon, text }) => (
+            <li class="flex items-center gap-3.5 text-sm text-zinc-500 dark:text-zinc-400">
+              <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg
+                           bg-violet-500/8 dark:bg-violet-500/[0.1]
+                           border border-violet-500/15 dark:border-violet-500/20">
+                <svg class="h-4 w-4 text-violet-500 dark:text-violet-400"
+                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                     aria-hidden="true" set:html={icon} />
+              </span>
+              {text}
+            </li>
+          ))}
         </ul>
       </div>
 
-      <!-- Right: form -->
-      <div class="card p-6 sm:p-8">
-        <!--
-          Netlify form:
-          - name="contact"         → registers the form in the Netlify dashboard
-          - data-netlify="true"    → enables Netlify form handling at build time
-          - data-netlify-honeypot  → anti-bot honeypot field (see hidden input below)
-          - action="/thanks"       → redirect after successful submission
-        -->
+      <!-- ── Right: glass form card ───────────────────────── -->
+      <div class="
+        relative rounded-2xl overflow-hidden
+        border border-zinc-200/70 dark:border-white/[0.08]
+        bg-white dark:bg-white/[0.03]
+        dark:backdrop-blur-md
+        dark:shadow-card-glow
+        p-6 sm:p-8
+      ">
+        <!-- Shimmer line across top -->
+        <div aria-hidden="true" class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-violet-500/30 to-transparent"></div>
+
         <form
           name="contact"
           method="POST"
@@ -72,15 +93,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           class="space-y-5"
           novalidate
         >
-          <!-- Hidden Netlify form-name field (required for AJAX / SPA setups) -->
           <input type="hidden" name="form-name" value="contact" />
 
-          <!-- Honeypot — hidden from real users, catches bots that fill every field -->
           <div class="hidden" aria-hidden="true">
-            <label>
-              Don't fill this out if you're human:
-              <input name="bot-field" tabindex="-1" autocomplete="off" />
-            </label>
+            <label>Don't fill this out: <input name="bot-field" tabindex="-1" autocomplete="off" /></label>
           </div>
 
           <!-- Name -->
@@ -88,15 +104,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
             <label for="name" class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">
               Name <span class="text-violet-500" aria-hidden="true">*</span>
             </label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              required
-              autocomplete="name"
-              placeholder="Your full name"
-              class="input-field"
-            />
+            <input type="text" id="name" name="name" required autocomplete="name"
+                   placeholder="Your full name" class="input-field" />
           </div>
 
           <!-- Email -->
@@ -104,15 +113,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
             <label for="email" class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">
               Email <span class="text-violet-500" aria-hidden="true">*</span>
             </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              required
-              autocomplete="email"
-              placeholder="you@example.com"
-              class="input-field"
-            />
+            <input type="email" id="email" name="email" required autocomplete="email"
+                   placeholder="you@example.com" class="input-field" />
           </div>
 
           <!-- Subject -->
@@ -134,18 +136,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
             <label for="message" class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">
               Message <span class="text-violet-500" aria-hidden="true">*</span>
             </label>
-            <textarea
-              id="message"
-              name="message"
-              required
-              rows="5"
-              placeholder="Tell me about your project, timeline, and budget…"
-              class="input-field resize-none"
-            ></textarea>
+            <textarea id="message" name="message" required rows="5"
+                      placeholder="Tell me about your project, timeline, and budget…"
+                      class="input-field resize-none"></textarea>
           </div>
 
-          <!-- Submit -->
-          <button type="submit" class="btn-primary w-full justify-center py-3 text-base">
+          <button type="submit" class="btn-primary w-full justify-center py-3.5 text-base font-semibold">
             Send message
             <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <line x1="22" y1="2" x2="11" y2="13" />
@@ -153,11 +149,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
             </svg>
           </button>
 
-          <p class="text-xs text-zinc-400 dark:text-zinc-600 text-center">
+          <p class="text-xs text-zinc-400 dark:text-zinc-600 text-center leading-relaxed">
             Your information is never shared with third parties.
           </p>
         </form>
       </div>
+
     </div>
   </section>
 </BaseLayout>

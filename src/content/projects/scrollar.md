@@ -3,7 +3,6 @@ title: "Scrollar"
 description: "A scroll-driven storytelling library for the web. Animate any element in sync with the user's scroll position using a declarative, zero-dependency API."
 pubDate: 2024-06-10
 tags: ["JavaScript", "CSS", "Web Animation", "Open Source", "TypeScript"]
-image: "/images/project-scrollar.jpg"
 repositoryUrl: "https://github.com/yourusername/scrollar"
 liveUrl: "https://scrollar.example.com"
 featured: true

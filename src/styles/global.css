@@ -1,9 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* ─── Base ──────────────────────────────────────────────────── */
 @layer base {
   :root {
     --color-surface-50:  250 250 250;
@@ -21,70 +22,179 @@
     @apply scroll-smooth antialiased;
   }
 
+  /* Light mode canvas */
   body {
-    @apply bg-zinc-50 text-zinc-800 font-sans transition-colors duration-300;
+    @apply bg-zinc-50 text-zinc-800 font-sans;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
+  /* Dark mode: rich layered gradient canvas instead of flat black */
   .dark body {
-    @apply bg-zinc-950 text-zinc-200;
+    color: #e4e4e7;
+    background-color: #09090b;
+    background-image:
+      radial-gradient(ellipse 90% 55% at 50% -5%, rgba(139,92,246,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse 55% 45% at 85% 75%, rgba(99,102,241,0.07) 0%, transparent 55%),
+      radial-gradient(ellipse 40% 35% at 10% 85%, rgba(167,139,250,0.05) 0%, transparent 50%);
   }
+
+  /* Subtle grain texture overlay — zero JS, zero render cost */
+  .dark body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+    opacity: 0.028;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Ensure all direct body children sit above the grain layer */
+  body > * { position: relative; z-index: 1; }
 
   ::selection {
-    @apply bg-violet-500/30 text-violet-900 dark:text-violet-100;
+    @apply bg-violet-500/25 text-violet-100;
   }
 
   :focus-visible {
     @apply outline-2 outline-offset-2 outline-violet-500 rounded-sm;
   }
+
+  /* Premium dark-mode scrollbar */
+  .dark ::-webkit-scrollbar       { width: 6px; height: 6px; }
+  .dark ::-webkit-scrollbar-track { background: transparent; }
+  .dark ::-webkit-scrollbar-thumb {
+    background: rgba(139,92,246,0.3);
+    border-radius: 9999px;
+  }
+  .dark ::-webkit-scrollbar-thumb:hover {
+    background: rgba(139,92,246,0.55);
+  }
 }
 
+/* ─── Components ─────────────────────────────────────────────── */
 @layer components {
+
+  /* BUTTONS */
   .btn-primary {
-    @apply inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-violet-600 text-white
-           font-medium text-sm tracking-wide
-           hover:bg-violet-500 active:scale-95
-           transition-all duration-150 ease-in-out
+    @apply relative inline-flex items-center gap-2 px-5 py-2.5 rounded-lg
+           bg-gradient-to-r from-violet-600 to-indigo-600
+           text-white font-medium text-sm tracking-wide
+           hover:from-violet-500 hover:to-indigo-500
+           hover:shadow-glow-sm
+           active:scale-[0.97]
+           transition-all duration-200 ease-out
            focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2
            dark:focus-visible:ring-offset-zinc-950;
   }
 
   .btn-ghost {
     @apply inline-flex items-center gap-2 px-4 py-2 rounded-lg
-           text-zinc-600 dark:text-zinc-400
-           hover:bg-zinc-100 dark:hover:bg-zinc-800
+           text-zinc-500 dark:text-zinc-400
+           hover:bg-zinc-100 dark:hover:bg-white/[0.06]
            hover:text-zinc-900 dark:hover:text-zinc-100
+           dark:border dark:border-transparent dark:hover:border-white/[0.08]
            font-medium text-sm tracking-wide
-           transition-all duration-150 ease-in-out;
+           transition-all duration-200 ease-out;
   }
 
+  /* GLASSMORPHISM CARD */
+  .card {
+    @apply rounded-2xl overflow-hidden
+           border border-zinc-200/70 dark:border-white/[0.07]
+           bg-white dark:bg-white/[0.03]
+           dark:shadow-card-glow
+           shadow-sm dark:shadow-none
+           hover:-translate-y-1 hover:scale-[1.015]
+           dark:hover:border-white/[0.13]
+           hover:shadow-lg dark:hover:shadow-card-hover
+           transition-all duration-300 ease-out;
+    /* hardware-accelerate transforms */
+    will-change: transform;
+  }
+
+  /* TECH-COLOURED TAGS */
   .tag {
     @apply inline-block px-2.5 py-0.5 rounded-full text-xs font-medium
-           bg-zinc-100 dark:bg-zinc-800
+           bg-zinc-100 dark:bg-zinc-800/70
            text-zinc-600 dark:text-zinc-400
-           border border-zinc-200 dark:border-zinc-700;
+           border border-zinc-200 dark:border-zinc-700/50;
   }
 
-  .card {
-    @apply rounded-2xl border border-zinc-200 dark:border-zinc-800
-           bg-white dark:bg-zinc-900
-           shadow-sm hover:shadow-md dark:shadow-zinc-900/50
-           transition-all duration-200;
+  /* JavaScript */
+  .tag-js      { @apply bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/25; }
+  /* TypeScript */
+  .tag-ts      { @apply bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/25; }
+  /* React / Vue / Svelte */
+  .tag-react   { @apply bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border-cyan-500/25; }
+  /* Node / Express / Bun */
+  .tag-node    { @apply bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/25; }
+  /* Databases */
+  .tag-db      { @apply bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border-indigo-500/25; }
+  /* Data / R / Python */
+  .tag-data    { @apply bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/25; }
+  /* CSS / Design */
+  .tag-css     { @apply bg-pink-500/10 text-pink-600 dark:text-pink-400 border-pink-500/25; }
+  /* Open Source */
+  .tag-oss     { @apply bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/25; }
+  /* Animation / Web APIs */
+  .tag-web     { @apply bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/25; }
+  /* Viz / Charts */
+  .tag-viz     { @apply bg-fuchsia-500/10 text-fuchsia-600 dark:text-fuchsia-400 border-fuchsia-500/25; }
+  /* Stack meta (MERN etc) */
+  .tag-stack   { @apply bg-violet-500/10 text-violet-600 dark:text-violet-400 border-violet-500/25; }
+
+  /* ANIMATED SLIDE-IN UNDERLINE — pure CSS */
+  .link-underline {
+    @apply relative;
+  }
+  .link-underline::after {
+    content: '';
+    @apply absolute -bottom-px left-0 h-px w-0 bg-current rounded-full;
+    transition: width 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .link-underline:hover::after { width: 100%; }
+
+  /* GRADIENT CLIP TEXT */
+  .gradient-text {
+    @apply bg-gradient-to-r from-violet-400 via-fuchsia-300 to-indigo-400 bg-clip-text text-transparent;
+    background-size: 200% auto;
   }
 
+  /* SECTION LABEL */
+  .section-label {
+    @apply inline-flex items-center gap-1.5 text-xs font-semibold tracking-widest uppercase
+           bg-gradient-to-r from-violet-400 to-fuchsia-400 bg-clip-text text-transparent;
+  }
+
+  /* GLASS UTILITY */
+  .glass {
+    @apply dark:bg-white/[0.04] dark:backdrop-blur-md
+           dark:border-white/[0.08];
+  }
+
+  /* FORM INPUTS */
   .input-field {
-    @apply w-full rounded-lg px-4 py-3
-           bg-white dark:bg-zinc-900
-           border border-zinc-200 dark:border-zinc-700
+    @apply w-full rounded-xl px-4 py-3
+           bg-white dark:bg-white/[0.05]
+           border border-zinc-200 dark:border-white/[0.08]
            text-zinc-900 dark:text-zinc-100
            placeholder:text-zinc-400 dark:placeholder:text-zinc-600
-           focus:border-violet-500 dark:focus:border-violet-400
-           focus:ring-2 focus:ring-violet-500/20 dark:focus:ring-violet-400/20
-           transition-colors duration-150
+           focus:border-violet-500/70 dark:focus:border-violet-400/50
+           focus:ring-2 focus:ring-violet-500/15 dark:focus:ring-violet-400/10
+           dark:backdrop-blur-sm
+           transition-all duration-150
            text-sm;
   }
 
-  .section-label {
-    @apply text-xs font-semibold tracking-widest uppercase
-           text-violet-600 dark:text-violet-400;
+  /* SHIMMER LOADING SKELETON */
+  .shimmer {
+    background: linear-gradient(90deg,
+      rgba(255,255,255,0) 0%,
+      rgba(255,255,255,0.06) 50%,
+      rgba(255,255,255,0) 100%
+    );
+    background-size: 200% 100%;
+    @apply animate-shimmer;
   }
 }
