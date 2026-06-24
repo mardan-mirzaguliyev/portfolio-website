@@ -1,37 +1,16 @@
 ---
 title: "The Narratives in Graphs"
-description: "An interactive data visualization platform that transforms complex datasets into compelling visual narratives, enabling non-technical stakeholders to explore insights through storytelling."
+description: "Text mining and Sentiment Analysis of artistic materials."
 featured: true
-tags: ["R", "ggplot2", "Shiny", "Data Science", "Visualization"]
-liveUrl: "https://narratives.example.com"
-repositoryUrl: "https://github.com/yourusername/the_narratives_in_graphs"
+tags: ["R", "ggplot2", "Sentiment Analysis", "Text Mining",  "Data Science", "Visualization"]
+liveUrl: "https://thenarrativesingraphs.substack.com/"
+logo: "../../assets/01-narratives-in-graphs-logo.png.png
 ---
+
 
 ## Overview
 
-The Narratives in Graphs project bridges the gap between raw data and human understanding. Built with R and Shiny, it provides an interactive dashboard that guides users through a curated data story rather than leaving them to explore a static chart.
+We all like to listen to music, read a text or enjoy watching movies. We enjoy how artists put the words in lines, lines in verses and create sequences that mesmerize human emotions. True art is able to make us feel the artist’s emotional state while creating their masterpieces. But sometimes we may miss the core feelings behind the words and thoughts born out of them. So, The Narratives in Graphs project aims to provide sentiment analysis of song lyrics, films scrips, short stories and even novels. I am using R and its relevant packages to analyze text data. 
 
-## Problem
 
-Data analysts often produce technically accurate charts that stakeholders struggle to interpret. The insight gets lost in the noise of unlabeled axes, unexplained outliers, and raw scales.
 
-## Solution
-
-I designed a guided narrative flow where each panel reveals a new layer of the story:
-
-1. **Context** — establish the baseline and timeframe
-2. **Anomaly detection** — highlight statistically significant events
-3. **Causal annotation** — overlay external events that explain the anomalies
-4. **Takeaway** — surface the single most actionable conclusion
-
-## Technical Details
-
-- **R + ggplot2** for all chart rendering with a custom theme layer
-- **Shiny** reactive framework for real-time user interaction
-- **Plotly** for hover-state details and mobile-friendly touch events
-- **CSS Grid** layout exported from R Markdown for embed-ready output
-
-## Results
-
-- 3× increase in stakeholder engagement during quarterly reviews
-- Reduced "what does this mean?" follow-up questions by ~60%
