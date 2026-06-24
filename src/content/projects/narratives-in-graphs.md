@@ -4,9 +4,10 @@ description: "Analyzing the texts of great songs, movie scripts, and literature 
 featured: true
 tags: ["Data Science", "R Programming", "Text Mining", "Data Visualization", "Humanities"]
 liveUrl: "https://thenarrativesingraphs.substack.com"
-logo: "/images/narratives-graphs-logo.png"
+logo: "src/assets/images/01-narratives-in-graphs-logo.png"
 pubDate: 2026-06-24
 ---
+
 
 ## Behind the Project: Text Data Journalism
 
