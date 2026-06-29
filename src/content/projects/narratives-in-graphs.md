@@ -3,11 +3,9 @@ title: "The Narratives in Graphs"
 description: "Analyzing the texts of great songs, movie scripts, and literature through data science, text mining, and data visualization in R."
 featured: true
 tags: ["Data Science", "R Programming", "Text Mining", "Data Visualization", "Humanities"]
-liveUrl: "https://thenarrativesingraphs.substack.com"
 logo: "src/assets/images/01-narratives-in-graphs-logo.png"
-pubDate: 2026-06-24
+pubDate: 2026-06-22
 ---
-
 
 ## Behind the Project: Text Data Journalism
 
