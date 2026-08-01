@@ -14,7 +14,7 @@ interface Props {
 
 const {
   title,
-  description = 'Mardan Mirzaguliyev — Frontend Engineer specializing in data-driven interfaces, performance, and open-source tooling.',
+  description = 'Mardan Mirzaguliyev — Data Analyst specializing in data visualisation, text mining, and open-source tooling.',
   image = '/og-default.png',
   noIndex = false,
   type = 'website',
@@ -24,7 +24,7 @@ const {
 const siteUrl   = Astro.site ?? new URL('https://mmardan.com');
 const canonical = new URL(Astro.url.pathname, siteUrl).href;
 const ogImage   = new URL(image, siteUrl).href;
-const pageTitle = title === 'Home' ? 'Mardan Mirzaguliyev — Developer' : `${title} · Mardan`;
+const pageTitle = title === 'Home' ? 'Mardan Mirzaguliyev — Data Analyst' : `${title} · Mardan`;
 ---
 
 <!doctype html>

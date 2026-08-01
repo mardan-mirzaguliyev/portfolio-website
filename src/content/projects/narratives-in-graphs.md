@@ -3,7 +3,7 @@ title: "The Narratives in Graphs"
 description: "Analyzing the texts of great songs, movie scripts, and literature through data science, text mining, and data visualization in R."
 featured: true
 tags: ["Data Science", "R Programming", "Text Mining", "Data Visualization", "Humanities"]
-logo: "src/assets/images/01-narratives-in-graphs-logo.png"
+logo: "../../assets/images/01-narratives-in-graphs-logo.png"
 pubDate: 2026-06-22
 ---
 

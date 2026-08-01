@@ -1,4 +1,7 @@
 ---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
 interface Props {
   title: string;
   description: string;
@@ -8,12 +11,14 @@ interface Props {
   repositoryUrl?: string;
   featured?: boolean;
   size?: 'default' | 'large';
+  logo?: ImageMetadata;
 }
 
 const {
   title, description, tags, href,
   liveUrl, repositoryUrl, featured,
   size = 'default',
+  logo,
 } = Astro.props;
 
 // Primary destination: external liveUrl takes precedence over the internal slug page
@@ -85,12 +90,23 @@ const isLarge = size === 'large';
         'absolute rounded-full bg-violet-500/20 blur-3xl transition-all duration-500 group-hover:bg-violet-500/30',
         isLarge ? 'h-48 w-48' : 'h-28 w-28',
       ]}></div>
-      <span class:list={[
-        'relative font-extrabold text-violet-300/25 select-none tracking-tight group-hover:text-violet-300/40 transition-colors duration-300',
-        isLarge ? 'text-[7rem]' : 'text-5xl',
-      ]}>
-        {title.charAt(0)}
-      </span>
+      {logo ? (
+        <Image
+          src={logo}
+          alt={`${title} logo`}
+          class:list={[
+            'relative object-contain drop-shadow-lg',
+            isLarge ? 'h-28 w-28' : 'h-16 w-16',
+          ]}
+        />
+      ) : (
+        <span class:list={[
+          'relative font-extrabold text-violet-300/25 select-none tracking-tight group-hover:text-violet-300/40 transition-colors duration-300',
+          isLarge ? 'text-[7rem]' : 'text-5xl',
+        ]}>
+          {title.charAt(0)}
+        </span>
+      )}
       {tags[0] && (
         <span class="relative text-[10px] font-semibold tracking-widest uppercase px-2.5 py-1 rounded-full
                      bg-violet-500/15 text-violet-300/70 border border-violet-400/20
