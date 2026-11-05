@@ -19,62 +19,46 @@ const { Content } = await post.render();
 
 const { title, description, pubDate, updatedDate, tags } = post.data;
 
-const formattedPubDate = pubDate.toLocaleDateString('en-US', {
-  year: 'numeric', month: 'long', day: 'numeric',
-});
-const formattedUpdatedDate = updatedDate?.toLocaleDateString('en-US', {
-  year: 'numeric', month: 'long', day: 'numeric',
-});
+const formatDate = (date: Date) =>
+  date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' });
 ---
 
 <BaseLayout title={title} description={description} type="article" pubDate={pubDate}>
-  <article class="mx-auto max-w-3xl px-6 py-16">
-    <!-- Breadcrumb -->
-    <nav aria-label="Breadcrumb" class="mb-8">
-      <ol class="flex items-center gap-2 text-sm text-zinc-500 dark:text-zinc-400">
-        <li><a href="/" class="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">Home</a></li>
-        <li aria-hidden="true"><span class="text-zinc-300 dark:text-zinc-700">/</span></li>
-        <li><a href="/blog" class="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">Blog</a></li>
-        <li aria-hidden="true"><span class="text-zinc-300 dark:text-zinc-700">/</span></li>
-        <li class="text-zinc-900 dark:text-zinc-100 font-medium truncate max-w-[200px]" aria-current="page">{title}</li>
-      </ol>
-    </nav>
+  <article class="px-6 pb-32 pt-36 sm:px-10 sm:pb-40 sm:pt-44 lg:px-16">
+    <div class="mx-auto max-w-3xl">
+      <nav aria-label="Breadcrumb" class="eyebrow mb-10">
+        <ol class="breadcrumb">
+          <li><a href="/">Home</a></li>
+          <li aria-hidden="true">/</li>
+          <li><a href="/blog">Blog</a></li>
+        </ol>
+      </nav>
 
-    <header class="mb-10">
-      <div class="flex flex-wrap gap-2 mb-4">
-        {tags.map((tag) => <span class="tag">{tag}</span>)}
+      <header class="mb-14 border-b border-ink/10 pb-10">
+        <h1 class="reveal font-display text-[clamp(2.25rem,5.5vw,4.5rem)] font-semibold leading-[0.95] tracking-[-0.05em]">
+          {title}{!/[.?!]$/.test(title) && <span class="text-brand">.</span>}
+        </h1>
+        <p class="reveal mt-6 text-lg leading-relaxed text-ink/60" style="--reveal-delay:80ms">{description}</p>
+        <div class="reveal mt-8 flex flex-wrap items-center gap-x-6 gap-y-4" style="--reveal-delay:160ms">
+          <p class="font-mono text-xs text-ink/50">
+            <time datetime={pubDate.toISOString()}>{formatDate(pubDate)}</time>
+            {updatedDate && <> · Updated <time datetime={updatedDate.toISOString()}>{formatDate(updatedDate)}</time></>}
+          </p>
+          <ul class="flex flex-wrap gap-2" role="list" aria-label="Tags">
+            {tags.map((tag) => <li class="chip">{tag}</li>)}
+          </ul>
+        </div>
+      </header>
+
+      <div class="prose max-w-none prose-headings:font-display prose-headings:font-semibold prose-headings:tracking-tight
+                  prose-a:underline-offset-4 prose-code:font-mono prose-code:text-sm
+                  prose-pre:rounded-none prose-pre:border prose-pre:border-ink/10 prose-img:border prose-img:border-ink/10">
+        <Content />
       </div>
-      <h1 class="text-3xl sm:text-4xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight mb-4">
-        {title}
-      </h1>
-      <p class="text-zinc-500 dark:text-zinc-400 text-lg mb-5">{description}</p>
-      <div class="flex items-center gap-4 text-sm text-zinc-400 dark:text-zinc-500 pb-4 border-b border-zinc-200 dark:border-white/10">
-        <time datetime={pubDate.toISOString()}>Published {formattedPubDate}</time>
-        {updatedDate && (
-          <time datetime={updatedDate.toISOString()} class="text-zinc-400 dark:text-zinc-600">
-            · Updated {formattedUpdatedDate}
-          </time>
-        )}
+
+      <div class="mt-20 border-t border-ink/10 pt-8">
+        <a href="/blog" class="text-link">← All posts</a>
       </div>
-    </header>
-
-    <div class="prose prose-zinc dark:prose-invert max-w-none
-                prose-headings:font-bold prose-headings:tracking-tight
-                prose-a:text-violet-600 dark:prose-a:text-violet-400
-                prose-a:no-underline hover:prose-a:underline
-                prose-code:font-mono prose-code:text-sm
-                prose-pre:rounded-xl prose-pre:border prose-pre:border-zinc-200 dark:prose-pre:border-white/[0.12]
-                prose-img:rounded-xl prose-table:text-sm">
-      <Content />
-    </div>
-
-    <div class="mt-14 pt-8 border-t border-zinc-200 dark:border-white/10">
-      <a href="/blog" class="btn-ghost">
-        <svg class="h-4 w-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M13 8H3M7 4l-4 4 4 4" />
-        </svg>
-        All posts
-      </a>
     </div>
   </article>
 </BaseLayout>

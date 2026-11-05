@@ -1,139 +1,153 @@
 ---
-import ThemeToggle from './ThemeToggle.astro';
-
 const navLinks = [
+  { label: 'Home',     href: '/'         },
   { label: 'Projects', href: '/projects' },
   { label: 'Blog',     href: '/blog'     },
   { label: 'Contact',  href: '/contact'  },
 ];
 
-const currentPath = Astro.url.pathname;
+// Section pages stay active on their detail pages (/blog/my-post → Blog)
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const isActive = (href: string) => (href === '/' ? path === '/' : path === href || path.startsWith(`${href}/`));
 ---
 
-<header class="
-  sticky top-0 z-50 w-full
-  border-b border-zinc-200/50 dark:border-white/[0.06]
-  bg-paper/75
-  backdrop-blur-xl backdrop-saturate-150
-  dark:shadow-[inset_0_-1px_0_rgba(255,255,255,0.04)]
-">
-  <nav class="mx-auto flex max-w-5xl items-center justify-between px-6 py-4" aria-label="Main navigation">
+<header id="site-nav" class="site-nav fixed inset-x-0 top-0 z-50" data-scrolled="false" data-hidden="false" data-open="false">
+  <nav class="site-nav__bar flex items-center justify-between px-6 sm:px-10 lg:px-16" aria-label="Main navigation">
 
-    <!-- Wordmark -->
-    <a
-      href="/"
-      class="group font-bold text-zinc-900 dark:text-zinc-100 tracking-tight transition-colors duration-150"
-      aria-label="Home"
-    >
-      mmardan
-      <span class="text-violet-500 group-hover:text-violet-400 transition-colors duration-150">.</span>
-      <span class="group-hover:text-violet-500 transition-colors duration-150">com</span>
+    <a href="/" class="font-display text-[15px] font-semibold tracking-tight text-ink" aria-label="mmardan — Home">
+      mmardan<span class="text-brand">.</span>
     </a>
 
-    <!-- Desktop links -->
-    <ul class="hidden sm:flex items-center gap-0.5" role="list">
-      {navLinks.map(({ label, href }) => {
-        const isActive = currentPath === href || currentPath.startsWith(href + '/');
-        return (
-          <li>
-            <a
-              href={href}
-              class:list={[
-                'relative px-3.5 py-2 rounded-lg text-sm font-medium transition-all duration-200',
-                isActive
-                  ? [
-                      'text-violet-600 dark:text-violet-300',
-                      'bg-violet-50 dark:bg-violet-500/[0.12]',
-                      'border border-violet-200/60 dark:border-violet-500/[0.2]',
-                    ]
-                  : [
-                      'text-zinc-500 dark:text-zinc-400',
-                      'hover:text-zinc-900 dark:hover:text-zinc-100',
-                      'hover:bg-zinc-100/80 dark:hover:bg-white/[0.06]',
-                      'border border-transparent',
-                    ],
-              ]}
-              aria-current={isActive ? 'page' : undefined}
-            >
-              {label}
-            </a>
-          </li>
-        );
-      })}
+    <ul class="hidden md:flex items-center gap-10" role="list">
+      {navLinks.map(({ label, href }) => (
+        <li class="relative">
+          <a
+            href={href}
+            class="nav-link roll-link text-[13px] font-medium tracking-wide text-ink/60 hover:text-ink"
+            aria-current={isActive(href) ? 'page' : undefined}
+          >
+            <span class="roll-link__inner" data-text={label}>{label}</span>
+          </a>
+          <!-- Outside the link: .roll-link clips its overflow for the hover roll -->
+          {isActive(href) && <span class="nav-dot" aria-hidden="true"></span>}
+        </li>
+      ))}
     </ul>
 
-    <div class="flex items-center gap-1.5">
-      <ThemeToggle />
+    <div class="flex items-center gap-3 sm:gap-4">
+      <button type="button" class="theme-switch" role="switch" aria-checked="false" aria-label="Night mode" data-theme-switch>
+        <span class="theme-switch__knob" aria-hidden="true">
+          <svg class="theme-switch__icon theme-switch__icon--sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <circle cx="12" cy="12" r="4" />
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
+          </svg>
+          <svg class="theme-switch__icon theme-switch__icon--moon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
+          </svg>
+        </span>
+      </button>
 
-      <!-- Mobile menu button -->
       <button
-        id="mobile-menu-btn"
-        class="sm:hidden flex h-9 w-9 items-center justify-center rounded-lg
-               text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100
-               hover:bg-zinc-100 dark:hover:bg-white/[0.07]
-               border border-transparent dark:hover:border-white/[0.07]
-               transition-all duration-150"
+        id="site-menu-btn"
+        class="md:hidden relative h-10 w-10 -mr-2 flex items-center justify-center text-ink"
         aria-label="Open menu"
         aria-expanded="false"
-        aria-controls="mobile-menu"
+        aria-controls="site-menu"
       >
-        <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-          <path id="menu-icon-open"  stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-          <path id="menu-icon-close" stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" class="hidden" />
-        </svg>
+        <span class="menu-icon" aria-hidden="true"><span></span><span></span></span>
       </button>
     </div>
   </nav>
 
-  <!-- Mobile dropdown -->
-  <div
-    id="mobile-menu"
-    class="
-      hidden sm:hidden
-      border-t border-zinc-200/60 dark:border-white/[0.06]
-      bg-paper/90
-      backdrop-blur-xl px-4 pb-4
-    "
-    role="navigation"
-    aria-label="Mobile navigation"
-  >
-    <ul class="flex flex-col gap-1 pt-3" role="list">
-      {navLinks.map(({ label, href }) => {
-        const isActive = currentPath === href || currentPath.startsWith(href + '/');
-        return (
-          <li>
-            <a
-              href={href}
-              class:list={[
-                'flex items-center px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150',
-                isActive
-                  ? 'text-violet-600 dark:text-violet-300 bg-violet-50 dark:bg-violet-500/10 border border-violet-200/60 dark:border-violet-500/20'
-                  : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-white/[0.06] border border-transparent',
-              ]}
-            >
-              {label}
-            </a>
-          </li>
-        );
-      })}
+  <!-- Mobile full-screen menu -->
+  <div id="site-menu" class="site-menu md:hidden" aria-label="Mobile navigation">
+    <ul class="flex flex-col gap-2 px-6 sm:px-10" role="list">
+      {navLinks.map(({ label, href }, i) => (
+        <li class="overflow-hidden">
+          <a
+            href={href}
+            class="site-menu__link font-display"
+            style={`--i:${i}`}
+            aria-current={isActive(href) ? 'page' : undefined}
+          >{label}</a>
+        </li>
+      ))}
     </ul>
   </div>
 </header>
 
 <script>
-  const btn   = document.getElementById('mobile-menu-btn');
-  const menu  = document.getElementById('mobile-menu');
-  const open  = document.getElementById('menu-icon-open');
-  const close = document.getElementById('menu-icon-close');
+  const nav  = document.getElementById('site-nav')!;
+  const btn  = document.getElementById('site-menu-btn')!;
+  const menu = document.getElementById('site-menu')!;
 
-  // Astro bundles this script on every page that imports the layout — bail where the navbar isn't rendered
-  if (btn && menu && open && close) {
-    btn.addEventListener('click', () => {
-      const expanded = btn.getAttribute('aria-expanded') === 'true';
-      btn.setAttribute('aria-expanded', String(!expanded));
-      menu.classList.toggle('hidden');
-      open.classList.toggle('hidden');
-      close.classList.toggle('hidden');
-    });
+  // Solid on scroll; tucks away while scrolling down, returns on scroll up
+  let lastY = window.scrollY;
+  let ticking = false;
+
+  function update() {
+    ticking = false;
+    const y = window.scrollY;
+    nav.dataset.scrolled = String(y > 24);
+    if (nav.dataset.open !== 'true') {
+      nav.dataset.hidden = String(y > lastY && y > window.innerHeight * 0.8);
+    }
+    lastY = y;
   }
+
+  window.addEventListener('scroll', () => {
+    if (!ticking) { ticking = true; requestAnimationFrame(update); }
+  }, { passive: true });
+  update();
+
+  function setOpen(open: boolean) {
+    nav.dataset.open = String(open);
+    btn.setAttribute('aria-expanded', String(open));
+    btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    document.documentElement.style.overflow = open ? 'hidden' : '';
+  }
+
+  btn.addEventListener('click', () => setOpen(nav.dataset.open !== 'true'));
+
+  // Night mode — persisted under the 'theme' key, read before first paint in BaseLayout
+  const root     = document.documentElement;
+  const switches = document.querySelectorAll<HTMLElement>('[data-theme-switch]');
+
+  const syncSwitches = () => {
+    const dark = root.classList.contains('dark');
+    switches.forEach((s) => s.setAttribute('aria-checked', String(dark)));
+  };
+
+  function setTheme(dark: boolean, origin: HTMLElement) {
+    const apply = () => {
+      root.classList.toggle('dark', dark);
+      try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch {}
+      syncSwitches();
+    };
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!('startViewTransition' in document) || reduceMotion) return apply();
+
+    // New theme spreads out in a circle from the switch. The class opts this transition out of the
+    // page cross-fade defined in site.css.
+    const r = origin.getBoundingClientRect();
+    const x = r.left + r.width / 2;
+    const y = r.top + r.height / 2;
+    const radius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+
+    root.classList.add('theme-transition');
+    const transition = document.startViewTransition(apply);
+    transition.ready.then(() => {
+      root.animate(
+        { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`] },
+        { duration: 1000, easing: 'cubic-bezier(0.25, 1, 0.5, 1)', pseudoElement: '::view-transition-new(root)' },
+      );
+    });
+    transition.finished.finally(() => root.classList.remove('theme-transition'));
+  }
+
+  switches.forEach((s) => s.addEventListener('click', () => setTheme(!root.classList.contains('dark'), s)));
+  syncSwitches();
+  menu.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => setOpen(false)));
+  window.addEventListener('keydown', (e) => { if (e.key === 'Escape') setOpen(false); });
 </script>

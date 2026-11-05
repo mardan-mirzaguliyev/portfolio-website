@@ -23,6 +23,7 @@ const CATEGORY_ICONS: Record<AchievementCategory, string> = {
   'Machine Learning':           `<circle cx="5" cy="6" r="2"/><circle cx="5" cy="18" r="2"/><circle cx="19" cy="12" r="2"/><path d="M7 6.8 17 11.2M7 17.2l10-4.4" />`,
   'Web Development':            `<path d="m8 7-5 5 5 5M16 7l5 5-5 5M13.5 4l-3 16" />`,
   'Cloud Engineering':          `<path d="M17.5 19H8a5 5 0 1 1 1.1-9.88A6 6 0 0 1 20.5 11a4 4 0 0 1-3 8z" />`,
+  'Teaching & Linguistics':     `<path d="M2 5h7a3 3 0 0 1 3 3v12a2 2 0 0 0-2-2H2zM22 5h-7a3 3 0 0 0-3 3v12a2 2 0 0 1 2-2h8z" />`,
   'Professional Certification': `<circle cx="12" cy="9" r="6"/><path d="m8.5 14-1.5 7 5-3 5 3-1.5-7" />`,
 };
 
@@ -104,19 +105,27 @@ const formatDate = (date: string) => {
             </div>
 
             <ul class="mt-7 flex flex-wrap gap-2" role="list" aria-label="Skills covered">
-              {item.skills.map((skill) => <li class="cert-tag">{skill}</li>)}
+              {item.skills.map((skill) => <li class="chip">{skill}</li>)}
             </ul>
 
-            <a
-              href={item.credentialUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              class:list={['cert-verify', inProgress && 'cert-verify--ghost']}
-              aria-label={`${inProgress ? 'View course' : 'Verify credential'}: ${item.title} (opens in a new tab)`}
-            >
-              {inProgress ? 'View course' : 'Verify Credential'}
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg>
-            </a>
+            {item.credentialId && (
+              <p class="mt-7 font-mono text-[11px] text-ink/50">
+                Certificate No. <span class="select-all text-ink/75">{item.credentialId}</span>
+              </p>
+            )}
+
+            {item.credentialUrl && (
+              <a
+                href={item.credentialUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                class:list={['cert-verify', inProgress && 'cert-verify--ghost']}
+                aria-label={`${inProgress ? 'View course' : 'Verify credential'}: ${item.title} (opens in a new tab)`}
+              >
+                {inProgress ? 'View course' : 'Verify Credential'}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg>
+              </a>
+            )}
           </article>
         </li>
       );
@@ -156,7 +165,7 @@ const formatDate = (date: string) => {
     const fileLink = dialog.querySelector<HTMLAnchorElement>('.cert-lightbox__file')!;
     const closeBtn = dialog.querySelector<HTMLButtonElement>('.cert-lightbox__close')!;
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const CLOSE_MS = 450; // matches the panel transition in landing.css
+    const CLOSE_MS = 450; // matches the panel transition in site.css
     let closeTimer = 0;
 
     img.addEventListener('load', () => { dialog.dataset.loaded = 'true'; });

@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
+import { socialLinks } from '../../data/social';
 
 // Drop a portrait at src/assets/images/portrait.(jpg|png|webp) and it's picked up automatically
 const portraitModules = import.meta.glob<{ default: ImageMetadata }>(
@@ -9,10 +10,10 @@ const portraitModules = import.meta.glob<{ default: ImageMetadata }>(
 );
 const portrait = Object.values(portraitModules)[0]?.default;
 
-const links = [
-  { label: 'X',          handle: '@yourusername',           href: 'https://x.com/yourusername' },
-  { label: 'LinkedIn',   handle: 'in/yourusername',         href: 'https://linkedin.com/in/yourusername' },
-  { label: 'Newsletter', handle: 'Visage Quant',            href: 'https://visagequant.substack.com' },
+// Tech stack, grouped by practice — edit freely
+const stack = [
+  { area: 'Data science',    tools: ['R', 'Python', 'tidyverse', 'ggplot2', 'Shiny', 'Text mining', 'SQL'] },
+  { area: 'Web development', tools: ['JavaScript', 'TypeScript', 'React', 'Node.js', 'MongoDB', 'Astro', 'Tailwind CSS'] },
 ];
 ---
 
@@ -62,10 +63,27 @@ const links = [
           publication that reads song lyrics, film scripts and literature as data — tracing the
           emotional arcs hidden between the lines.
         </p>
+        <p>
+          I also build for the web — from full-stack JavaScript apps like Randomify to front-end
+          tooling like Scrollar — so the analysis can ship as something people actually use.
+        </p>
       </div>
 
+      <dl class="reveal mt-14 space-y-6 border-t border-ink/10 pt-8" style="--reveal-delay:150ms">
+        {stack.map(({ area, tools }) => (
+          <div class="grid gap-3 sm:grid-cols-[10rem_1fr] sm:gap-6">
+            <dt class="eyebrow pt-1.5">{area}</dt>
+            <dd>
+              <ul class="flex flex-wrap gap-2" role="list" aria-label={`${area} tools`}>
+                {tools.map((tool) => <li class="chip">{tool}</li>)}
+              </ul>
+            </dd>
+          </div>
+        ))}
+      </dl>
+
       <ul class="reveal mt-16 border-t border-ink/10" role="list" style="--reveal-delay:200ms">
-        {links.map(({ label, handle, href }) => (
+        {socialLinks.map(({ label, handle, href }) => (
           <li>
             <a href={href} target="_blank" rel="noopener noreferrer" class="link-row">
               <span class="link-row__label font-display">{label}</span>

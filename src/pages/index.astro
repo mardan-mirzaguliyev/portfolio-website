@@ -1,56 +1,22 @@
 ---
-import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import LandingNav from '../components/landing/LandingNav.astro';
-import Hero from '../components/landing/Hero.astro';
-import Intro from '../components/landing/Intro.astro';
-import About from '../components/landing/About.astro';
-import FeaturedWork from '../components/landing/FeaturedWork.astro';
-import Certifications from '../components/landing/Certifications.astro';
-import Contact from '../components/landing/Contact.astro';
-import '../styles/landing.css';
-
-const featured = (await getCollection('projects'))
-  .filter((p) => p.data.featured)
-  .sort((a, b) => a.data.title.localeCompare(b.data.title))
-  .slice(0, 3);
+import Hero from '../components/home/Hero.astro';
+import Intro from '../components/home/Intro.astro';
+import About from '../components/home/About.astro';
+import Certifications from '../components/home/Certifications.astro';
 ---
 
-<BaseLayout title="Home" variant="landing">
-  <LandingNav slot="header" />
+<BaseLayout title="Home">
   <Hero />
   <Intro />
   <About />
-  <FeaturedWork projects={featured} />
   <Certifications />
-  <Contact />
 </BaseLayout>
 
 <script>
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const finePointer  = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
   const clamp = (v: number, min: number, max: number) => Math.min(max, Math.max(min, v));
-
-  // ── Load sequence: release the hero entrance once fonts are in (or after 1.2s at worst)
-  Promise.race([document.fonts.ready, new Promise((r) => setTimeout(r, 1200))]).then(() => {
-    requestAnimationFrame(() => document.documentElement.classList.add('is-loaded'));
-  });
-
-  // ── Scroll reveals ─────────────────────────────────────────
-  // Elements entering in the same frame cascade top-to-bottom, left-to-right
-  const STAGGER_MS = 110;
-  const io = new IntersectionObserver((entries) => {
-    entries
-      .filter((entry) => entry.isIntersecting)
-      .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top || a.boundingClientRect.left - b.boundingClientRect.left)
-      .forEach((entry, i) => {
-        const el = entry.target as HTMLElement;
-        el.style.setProperty('--stagger', `${i * STAGGER_MS}ms`);
-        el.classList.add('is-visible');
-        io.unobserve(el);
-      });
-  }, { rootMargin: '0px 0px -10% 0px' });
-  document.querySelectorAll('.reveal, .reveal-clip').forEach((el) => io.observe(el));
 
   // ── Hero parallax + intro word highlight ───────────────────
   // Parallax eases toward the scroll position rather than snapping to it
@@ -111,17 +77,6 @@ const featured = (await getCollection('projects'))
       const r = hero.getBoundingClientRect();
       hero.style.setProperty('--mx', String((e.clientX - r.left) / r.width - 0.5));
       hero.style.setProperty('--my', String((e.clientY - r.top) / r.height - 0.5));
-    });
-
-    // Magnetic buttons lean toward the cursor
-    document.querySelectorAll<HTMLElement>('[data-magnetic]').forEach((el) => {
-      el.addEventListener('pointermove', (e) => {
-        const r = el.getBoundingClientRect();
-        const dx = e.clientX - (r.left + r.width / 2);
-        const dy = e.clientY - (r.top + r.height / 2);
-        el.style.transform = `translate(${dx * 0.3}px, ${dy * 0.3}px)`;
-      });
-      el.addEventListener('pointerleave', () => { el.style.transform = ''; });
     });
   }
 </script>

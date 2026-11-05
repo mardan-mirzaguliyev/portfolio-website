@@ -1,72 +1,38 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
 
-const allProjects = await getCollection('projects');
-const sorted = allProjects.sort((a, b) => a.data.title.localeCompare(b.data.title));
+// Featured first, then alphabetical
+const projects = (await getCollection('projects')).sort(
+  (a, b) => Number(b.data.featured) - Number(a.data.featured) || a.data.title.localeCompare(b.data.title),
+);
 
-const allTags = [...new Set(allProjects.flatMap((p) => p.data.tags))].sort();
+const allTags = [...new Set(projects.flatMap((p) => p.data.tags))].sort();
 ---
 
 <BaseLayout
   title="Projects"
-  description="A collection of my work — data visualisations, web apps, and open-source libraries."
+  description="Data analysis, text mining and full-stack web projects by Mardan Mirzaguliyev."
 >
+  <section class="px-6 pb-32 pt-36 sm:px-10 sm:pb-40 sm:pt-44 lg:px-16">
+    <PageHeader
+      eyebrow="Projects — Work"
+      title="Selected work"
+      lead={`${projects.length} projects across data analysis, text mining and full-stack web development.`}
+    />
 
-  <!-- Page header with gradient accent line -->
-  <section class="relative mx-auto max-w-5xl px-6 pt-20 pb-10">
-    <p class="section-label mb-3">Work</p>
-    <h1 class="text-4xl sm:text-5xl font-extrabold text-zinc-900 dark:text-zinc-50 tracking-tight mb-4">
-      All projects
-    </h1>
-    <p class="text-zinc-500 dark:text-zinc-400 max-w-lg text-base leading-relaxed">
-      <span class="font-semibold text-zinc-900 dark:text-zinc-100">{sorted.length}</span> projects spanning data science, web tooling, and full-stack applications.
-    </p>
-  </section>
-
-  <!-- Tag filter strip -->
-  <section class="mx-auto max-w-5xl px-6 pb-8">
-    <div class="flex flex-wrap gap-2" role="group" aria-label="Filter by tag" id="tag-filters">
-      <button
-        data-tag="all"
-        data-active
-        class="
-          inline-block px-3 py-1 rounded-full text-xs font-semibold border cursor-pointer
-          transition-all duration-150
-          bg-violet-500/10 text-violet-600 dark:text-violet-400 border-violet-500/25
-          data-[active]:bg-violet-500/15 data-[active]:border-violet-500/40
-          hover:border-violet-500/40 hover:bg-violet-500/15
-        "
-      >
-        All
-      </button>
+    <div class="reveal mb-14 flex flex-wrap gap-2" role="group" aria-label="Filter projects by technology">
+      <button type="button" class="filter-pill" data-filter="all" aria-pressed="true">All</button>
       {allTags.map((tag) => (
-        <button
-          data-tag={tag}
-          class="
-            inline-block px-3 py-1 rounded-full text-xs font-medium border cursor-pointer
-            transition-all duration-150
-            bg-zinc-100 dark:bg-white/[0.07]
-            text-zinc-600 dark:text-zinc-400
-            border-zinc-200 dark:border-white/[0.12]
-            hover:bg-zinc-200/70 dark:hover:bg-white/[0.09]
-            hover:text-zinc-900 dark:hover:text-zinc-100
-            hover:border-zinc-300 dark:hover:border-white/[0.15]
-            data-[active]:bg-violet-500/10 data-[active]:text-violet-600 data-[active]:dark:text-violet-400 data-[active]:border-violet-500/25
-          "
-        >
-          {tag}
-        </button>
+        <button type="button" class="filter-pill" data-filter={tag} aria-pressed="false">{tag}</button>
       ))}
     </div>
-  </section>
 
-  <!-- Project grid -->
-  <section class="mx-auto max-w-5xl px-6 pb-32">
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="projects-grid">
-      {sorted.map((project) => (
-        <div data-tags={project.data.tags.join(',')}>
+    <ul class="grid gap-x-8 gap-y-20 md:grid-cols-2 lg:grid-cols-3" role="list">
+      {projects.map((project, i) => (
+        <li class="reveal" data-tags={project.data.tags.join('|')} style={`--reveal-delay:${(i % 3) * 120}ms`}>
           <ProjectCard
             title={project.data.title}
             description={project.data.description}
@@ -76,27 +42,38 @@ const allTags = [...new Set(allProjects.flatMap((p) => p.data.tags))].sort();
             repositoryUrl={project.data.repositoryUrl}
             featured={project.data.featured}
             logo={project.data.logo}
+            index={i}
           />
-        </div>
+        </li>
       ))}
-    </div>
-  </section>
+    </ul>
 
+    <p class="mt-16 hidden text-ink/55" data-empty>No projects with that tag yet.</p>
+  </section>
 </BaseLayout>
 
 <script>
-  const filterBtns = document.querySelectorAll<HTMLButtonElement>('[data-tag]');
-  const cards      = document.querySelectorAll<HTMLDivElement>('[data-tags]');
+  const buttons = document.querySelectorAll<HTMLButtonElement>('[data-filter]');
+  const items   = document.querySelectorAll<HTMLElement>('[data-tags]');
+  const empty   = document.querySelector<HTMLElement>('[data-empty]');
 
-  filterBtns.forEach((btn) => {
+  buttons.forEach((btn) => {
     btn.addEventListener('click', () => {
-      const tag = btn.dataset.tag!;
-      filterBtns.forEach((b) => delete b.dataset.active);
-      btn.dataset.active = '';
-      cards.forEach((card) => {
-        const tags = card.dataset.tags!.split(',');
-        card.style.display = (tag === 'all' || tags.includes(tag)) ? '' : 'none';
+      const tag = btn.dataset.filter!;
+      buttons.forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+
+      let shown = 0;
+      items.forEach((item) => {
+        const match = tag === 'all' || item.dataset.tags!.split('|').includes(tag);
+        item.hidden = !match;
+        if (match) {
+          shown++;
+          // Filtered-in cards may never have scrolled into view — show them straight away
+          item.classList.add('is-visible');
+          item.querySelector('.reveal-clip')?.classList.add('is-visible');
+        }
       });
+      empty?.classList.toggle('hidden', shown > 0);
     });
   });
 </script>

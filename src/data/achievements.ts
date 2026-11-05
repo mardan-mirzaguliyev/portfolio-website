@@ -4,18 +4,16 @@
 // in-progress items first, then newest `date` first — array order doesn't matter.
 //
 // Certificate images: drop the original file in public/assets/certificates/
-// and point `imageUrl` at it, e.g. '/assets/certificates/my-cert.png'.
+// and point `imageUrl` at it, e.g. '/assets/certificates/my-cert.jpg'.
 // Until the file exists the card shows a placeholder frame and the build
 // prints a warning naming the missing file.
-//
-// ⚠️ The entries below are PLACEHOLDERS — replace titles, dates, images and
-// credential URLs with your own before deploying.
 
 export type AchievementCategory =
   | 'Data Science'
   | 'Machine Learning'
   | 'Web Development'
   | 'Cloud Engineering'
+  | 'Teaching & Linguistics'
   | 'Professional Certification';
 
 export interface Achievement {
@@ -27,8 +25,10 @@ export interface Achievement {
   category: AchievementCategory;
   /** Original certificate image, as a path under public/ — opens full size in the lightbox */
   imageUrl?: string;
-  /** Public verification page — opens in a new tab */
-  credentialUrl: string;
+  /** Public verification page — opens in a new tab. Omit if the issuer has none; set credentialId instead. */
+  credentialUrl?: string;
+  /** Certificate / credential number, shown on the card */
+  credentialId?: string;
   /** 2–4 core skills; shown as tags */
   skills: string[];
   /** Highlights the card with the brand accent */
@@ -37,46 +37,28 @@ export interface Achievement {
   status?: 'in-progress';
 }
 
+// Titles, issuers, dates and links are taken from the certificate images themselves.
 export const achievementsData: Achievement[] = [
   {
-    id: 'google-advanced-data-analytics',
-    title: 'Google Advanced Data Analytics Professional Certificate',
+    id: 'google-data-analytics',
+    title: 'Google Data Analytics Professional Certificate',
     issuer: 'Google / Coursera',
-    date: '2026-04',
+    date: '2022-06-04',
     category: 'Data Science',
-    imageUrl: '/assets/certificates/google-advanced-data-analytics.png',
-    credentialUrl: 'https://www.coursera.org/account/accomplishments/professional-cert/REPLACE_ME',
-    skills: ['R', 'Python', 'EDA', 'Statistical Analysis'],
+    imageUrl: '/assets/certificates/google-data-analytics.jpg',
+    credentialUrl: 'https://coursera.org/verify/professional-cert/HZ3F7SM29SAB',
+    skills: ['R', 'SQL', 'Tableau', 'Spreadsheets'],
     featured: true,
   },
   {
-    id: 'machine-learning-specialization',
-    title: 'Machine Learning Specialization',
-    issuer: 'DeepLearning.AI & Stanford Online / Coursera',
-    date: '2025-11',
-    category: 'Machine Learning',
-    imageUrl: '/assets/certificates/machine-learning-specialization.png',
-    credentialUrl: 'https://www.coursera.org/account/accomplishments/specialization/REPLACE_ME',
-    skills: ['Supervised Learning', 'Neural Networks', 'scikit-learn'],
-  },
-  {
-    id: 'text-mining-with-r',
-    title: 'Text Mining with R',
-    issuer: 'DataCamp',
-    date: '2025-06',
-    category: 'Data Science',
-    imageUrl: '/assets/certificates/text-mining-with-r.png',
-    credentialUrl: 'https://www.datacamp.com/statement-of-accomplishment/course/REPLACE_ME',
-    skills: ['R', 'tidytext', 'Sentiment Analysis'],
-  },
-  {
-    id: 'meta-full-stack',
-    title: 'Meta Full-Stack Developer Professional Certificate',
-    issuer: 'Meta / Coursera',
-    date: '2026-09',
-    category: 'Web Development',
-    credentialUrl: 'https://www.coursera.org/professional-certificates/REPLACE_ME',
-    skills: ['React', 'Node.js', 'REST APIs'],
-    status: 'in-progress',
+    id: 'tesol-certificate',
+    title: 'TESOL Certificate — Teaching English to Speakers of Other Languages',
+    issuer: 'Arizona State University — Global Launch',
+    date: '2026-10',
+    category: 'Teaching & Linguistics',
+    imageUrl: '/assets/certificates/tesol.jpg',
+    credentialId: 'a09Vy00000P1jg5IAB',
+    skills: ['Second Language Acquisition', 'Lesson Design', 'Assessment', 'Pedagogy'],
+    featured: true,
   },
 ];

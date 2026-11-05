@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import '../styles/site.css';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
 
@@ -10,8 +11,6 @@ interface Props {
   noIndex?: boolean;
   type?: 'website' | 'article';
   pubDate?: Date;
-  /** 'landing' renders a bare, always-dark shell — the page supplies its own nav via slot="header" */
-  variant?: 'default' | 'landing';
 }
 
 const {
@@ -21,10 +20,10 @@ const {
   noIndex = false,
   type = 'website',
   pubDate,
-  variant = 'default',
 } = Astro.props;
 
-const isLanding = variant === 'landing';
+// The homepage runs the hero load sequence (header included); other pages render straight away
+const isHome = Astro.url.pathname === '/';
 
 const siteUrl   = Astro.site ?? new URL('https://mmardan.com');
 const canonical = new URL(Astro.url.pathname, siteUrl).href;
@@ -33,7 +32,7 @@ const pageTitle = title === 'Home' ? 'Mardan Mirzaguliyev — Data Analyst' : `$
 ---
 
 <!doctype html>
-<html lang="en" class:list={[isLanding && 'landing']}>
+<html lang="en" class:list={[isHome && 'is-home']}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -47,10 +46,8 @@ const pageTitle = title === 'Home' ? 'Mardan Mirzaguliyev — Data Analyst' : `$
         document.documentElement.classList.toggle('dark', stored === 'dark');
       })();
     </script>
-    {isLanding && (
-      <!-- Flags JS support so scroll-reveal styles only hide content when they can un-hide it -->
-      <script is:inline>document.documentElement.classList.add('js');</script>
-    )}
+    <!-- Flags JS support so scroll-reveal styles only hide content when they can un-hide it -->
+    <script is:inline>document.documentElement.classList.add('js');</script>
 
     <!-- Primary meta -->
     <title>{pageTitle}</title>
@@ -83,17 +80,51 @@ const pageTitle = title === 'Home' ? 'Mardan Mirzaguliyev — Data Analyst' : `$
     <meta name="generator" content={Astro.generator} />
   </head>
 
-  <body class:list={[
-    'min-h-screen',
-    isLanding ? 'bg-paper text-ink' : 'flex flex-col text-zinc-900 dark:text-zinc-100',
-  ]}>
+  <body id="top" class="flex min-h-screen flex-col bg-paper font-sans text-ink">
+    <Navbar />
 
-    {isLanding ? <slot name="header" /> : <Navbar />}
-
-    <main id="main-content" class:list={[!isLanding && 'flex-1']}>
+    <main id="main-content" class="flex-1">
       <slot />
     </main>
 
-    {!isLanding && <Footer />}
+    <Footer />
   </body>
 </html>
+
+<script>
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ── Load sequence: release entrance animations once fonts are in (or after 1.2s at worst)
+  Promise.race([document.fonts.ready, new Promise((r) => setTimeout(r, 1200))]).then(() => {
+    requestAnimationFrame(() => document.documentElement.classList.add('is-loaded'));
+  });
+
+  // ── Scroll reveals ─────────────────────────────────────────
+  // Elements entering in the same frame cascade top-to-bottom, left-to-right
+  const STAGGER_MS = 110;
+  const io = new IntersectionObserver((entries) => {
+    entries
+      .filter((entry) => entry.isIntersecting)
+      .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top || a.boundingClientRect.left - b.boundingClientRect.left)
+      .forEach((entry, i) => {
+        const el = entry.target as HTMLElement;
+        el.style.setProperty('--stagger', `${i * STAGGER_MS}ms`);
+        el.classList.add('is-visible');
+        io.unobserve(el);
+      });
+  }, { rootMargin: '0px 0px -10% 0px' });
+  document.querySelectorAll('.reveal, .reveal-clip').forEach((el) => io.observe(el));
+
+  // ── Magnetic buttons lean toward the cursor (mouse only) ───
+  if (window.matchMedia('(hover: hover) and (pointer: fine)').matches && !reduceMotion) {
+    document.querySelectorAll<HTMLElement>('[data-magnetic]').forEach((el) => {
+      el.addEventListener('pointermove', (e) => {
+        const r = el.getBoundingClientRect();
+        const dx = e.clientX - (r.left + r.width / 2);
+        const dy = e.clientY - (r.top + r.height / 2);
+        el.style.transform = `translate(${dx * 0.3}px, ${dy * 0.3}px)`;
+      });
+      el.addEventListener('pointerleave', () => { el.style.transform = ''; });
+    });
+  }
+</script>
