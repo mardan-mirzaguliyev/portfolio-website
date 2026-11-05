@@ -1,5 +1,5 @@
 ---
-title: "The Narratives in Graphs"
+title: "Visage Quant"
 description: "Analyzing the texts of great songs, movie scripts, and literature through data science, text mining, and data visualization in R."
 featured: true
 tags: ["Data Science", "R Programming", "Text Mining", "Data Visualization", "Humanities"]
@@ -15,7 +15,7 @@ However, in the midst of a captivating melody or a fast-paced script, **we somet
 
 > "True art is able to make us feel the artist’s emotional state while creating their masterpieces."
 
-`The Narratives in Graphs` was founded to bridge that gap. By combining a deep appreciation for the creative arts with rigorous technical analysis, this publication translates abstract emotional narratives into clear visual landscapes.
+`Visage Quant` was founded to bridge that gap. By combining a deep appreciation for the creative arts with rigorous technical analysis, this publication translates abstract emotional narratives into clear visual landscapes.
 
 ---
 
@@ -30,4 +30,4 @@ This project treats creative writing as rich, unstructured datasets. Using the *
 ### Explore the Analysis
 If you want to read the latest deep-dives, explore interactive plots, and dive into the text analysis of your favorite songs and stories, visit the live publication below.
 
-[👉 Read The Narratives in Graphs on Substack](https://thenarrativesingraphs.substack.com)
+[👉 Read Visage Quant on Substack](https://visagequant.substack.com/)
