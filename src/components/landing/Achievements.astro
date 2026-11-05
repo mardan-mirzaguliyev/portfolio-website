@@ -1,0 +1,85 @@
+---
+import { achievements, type AchievementCategory } from '../../data/achievements';
+
+// In-progress first, then newest first
+const items = [...achievements].sort((a, b) => {
+  if ((a.status === 'in-progress') !== (b.status === 'in-progress')) return a.status === 'in-progress' ? -1 : 1;
+  return b.date.localeCompare(a.date);
+});
+
+const CATEGORY_ICONS: Record<AchievementCategory, string> = {
+  'Data Science':               `<path d="M4 20V10M10 20V4M16 20v-7M22 20H2" />`,
+  'Machine Learning':           `<circle cx="5" cy="6" r="2"/><circle cx="5" cy="18" r="2"/><circle cx="19" cy="12" r="2"/><path d="M7 6.8 17 11.2M7 17.2l10-4.4" />`,
+  'Web Development':            `<path d="m8 7-5 5 5 5M16 7l5 5-5 5M13.5 4l-3 16" />`,
+  'Professional Certification': `<circle cx="12" cy="9" r="6"/><path d="m8.5 14 -1.5 7 5-3 5 3-1.5-7" />`,
+};
+
+// 'YYYY-MM' → 'Apr 2026' (UTC so the month never shifts with the visitor's timezone)
+const formatDate = (date: string) =>
+  new Intl.DateTimeFormat('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' })
+    .format(new Date(`${date.length === 7 ? `${date}-01` : date}T00:00:00Z`));
+---
+
+<section id="achievements" class="relative scroll-mt-20 bg-paper px-6 pb-40 sm:px-10 sm:pb-56 lg:px-16" aria-labelledby="achievements-title">
+
+  <div class="mb-16 grid gap-8 border-b border-ink/10 pb-8 sm:mb-20 lg:grid-cols-12 lg:items-end">
+    <div class="lg:col-span-8">
+      <p class="eyebrow reveal mb-6">(04) — Certifications</p>
+      <h2 id="achievements-title" class="reveal font-display text-[clamp(2.5rem,6.5vw,6.5rem)] font-semibold leading-[0.9] tracking-[-0.055em]">
+        Certifications &amp;<br class="hidden sm:block" /> achievements<span class="text-brand">.</span>
+      </h2>
+    </div>
+    <p class="reveal max-w-sm text-base leading-relaxed text-ink/65 lg:col-span-4 lg:justify-self-end lg:pb-2">
+      Continuous learning, on the record — the courses, credentials and milestones behind my work.
+    </p>
+  </div>
+
+  <ul class="grid gap-6 md:grid-cols-2 lg:grid-cols-3" role="list">
+    {items.map((item) => {
+      const inProgress = item.status === 'in-progress';
+      return (
+        <li class="reveal flex">
+          <article class:list={['cert-card', item.featured && 'cert-card--featured']}>
+
+            <header class="flex items-center justify-between gap-4">
+              <span class="cert-badge">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={CATEGORY_ICONS[item.category]} />
+                {item.category}
+              </span>
+
+              {inProgress ? (
+                <span class="cert-status">
+                  <span class="cert-status__dot" aria-hidden="true"></span>
+                  In progress
+                </span>
+              ) : (
+                <time class="font-mono text-xs text-ink/60" datetime={item.date}>{formatDate(item.date)}</time>
+              )}
+            </header>
+
+            <div class="mt-10 flex-1">
+              {item.featured && <p class="cert-featured">Featured</p>}
+              <h3 class="font-display text-[1.6rem] font-medium leading-[1.12] tracking-[-0.03em]">{item.title}</h3>
+              <p class="mt-3 text-sm text-ink/65">{item.issuer}</p>
+            </div>
+
+            <ul class="mt-8 flex flex-wrap gap-2" role="list" aria-label="Skills covered">
+              {item.skills.map((skill) => <li class="cert-tag">{skill}</li>)}
+            </ul>
+
+            <a
+              href={item.credentialUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="cert-link"
+              aria-label={`${inProgress ? 'View course' : 'Verify credential'}: ${item.title} (opens in a new tab)`}
+            >
+              <span>{inProgress ? 'View course' : 'Verify credential'}</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg>
+            </a>
+          </article>
+        </li>
+      );
+    })}
+  </ul>
+</section>
