@@ -577,35 +577,193 @@ html.landing ::-webkit-scrollbar-thumb { background: rgb(var(--ink) / 0.2); }
   color: rgb(var(--ink) / 0.75);
 }
 
-.cert-link {
+/* Certificate preview — fixed frame, image contained so text and logos are never cropped */
+.cert-thumb {
   position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  padding: 0.9rem;
+  overflow: hidden;
+  border: 1px solid rgb(var(--ink) / 0.08);
+  background: rgb(var(--ink) / 0.04);
+  cursor: zoom-in;
+}
+.cert-thumb__img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: transform 0.9s var(--ease-smooth), filter 0.6s var(--ease-out);
+}
+.cert-thumb:hover .cert-thumb__img,
+.cert-thumb:focus-visible .cert-thumb__img { transform: scale(1.035); }
+
+.cert-thumb__hint {
+  position: absolute;
+  right: 0.75rem; bottom: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 0.8rem;
+  border-radius: 999px;
+  background: rgb(20 20 18 / 0.78);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 500;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.4s var(--ease-out), transform 0.6s var(--ease-smooth), background-color 0.3s;
+}
+.cert-thumb__hint svg { width: 13px; height: 13px; }
+.cert-thumb:hover .cert-thumb__hint,
+.cert-thumb:focus-visible .cert-thumb__hint { opacity: 1; transform: none; background: var(--brand); }
+/* Touch screens can't hover — keep the hint visible */
+@media (hover: none) { .cert-thumb__hint { opacity: 1; transform: none; } }
+
+.cert-thumb--empty { cursor: default; color: rgb(var(--ink) / 0.12); }
+.cert-thumb--empty svg { width: 28%; height: auto; }
+
+/* Primary action */
+.cert-verify {
   align-self: flex-start;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
   margin-top: 2rem;
-  padding-bottom: 4px;
+  padding: 0.75rem 1.15rem;
+  border: 1px solid var(--brand);
+  border-radius: 999px;
+  background: var(--brand);
+  color: #fff;
   font-size: 13px;
   font-weight: 500;
-  letter-spacing: 0.02em;
-  color: rgb(var(--ink));
-  transform-origin: left center;
-  transition: color 0.4s var(--ease-out), transform 0.6s var(--ease-smooth);
+  letter-spacing: 0.01em;
+  transition: background-color 0.4s var(--ease-out), border-color 0.4s var(--ease-out), color 0.4s, transform 0.6s var(--ease-smooth);
 }
-.cert-link::after {
-  content: '';
+.cert-verify svg { width: 14px; height: 14px; transition: transform 0.6s var(--ease-smooth); }
+.cert-verify:hover { background: #0050d6; border-color: #0050d6; transform: scale(1.04); }
+.cert-verify:hover svg { transform: translate(2px, -2px); }
+.cert-verify--ghost { background: transparent; border-color: rgb(var(--ink) / 0.2); color: rgb(var(--ink)); }
+.cert-verify--ghost:hover { background: transparent; border-color: var(--brand); color: var(--brand); }
+
+/* Lightbox: full-screen <dialog> with its own scrim so open/close can be animated */
+.cert-lightbox {
+  width: 100vw;
+  height: 100dvh;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  overflow: hidden;
+}
+.cert-lightbox::backdrop { background: transparent; }
+.cert-lightbox__scrim {
   position: absolute;
-  left: 0; right: 0; bottom: 0;
-  height: 1px;
-  background: currentColor;
-  transform: scaleX(0.35);
-  transform-origin: left;
-  transition: transform 0.6s var(--ease-smooth);
+  inset: 0;
+  background: rgb(12 14 12 / 0.86);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  opacity: 0;
+  transition: opacity 0.45s var(--ease-out);
 }
-.cert-link svg { width: 14px; height: 14px; transition: transform 0.6s var(--ease-smooth); }
-.cert-link:hover { color: var(--brand); transform: scale(1.04); }
-.cert-link:hover::after { transform: scaleX(1); }
-.cert-link:hover svg { transform: translate(2px, -2px); }
+.cert-lightbox__panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 1rem 1rem 1.5rem;
+  opacity: 0;
+  transform: translateY(18px) scale(0.96);
+  transition: opacity 0.45s var(--ease-out), transform 0.7s var(--ease-smooth);
+  pointer-events: none;
+}
+@media (min-width: 640px) { .cert-lightbox__panel { padding: 1.5rem 2.5rem 2.5rem; } }
+.cert-lightbox.is-open .cert-lightbox__scrim { opacity: 1; }
+.cert-lightbox.is-open .cert-lightbox__panel { opacity: 1; transform: none; }
+.cert-lightbox__panel > * { pointer-events: auto; }
+
+.cert-lightbox__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 1rem;
+  color: #fff;
+}
+.cert-lightbox__title {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 14px;
+  font-weight: 500;
+  color: rgb(255 255 255 / 0.85);
+}
+.cert-lightbox__file {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 0.9rem;
+  border: 1px solid rgb(255 255 255 / 0.2);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: border-color 0.3s, background-color 0.3s;
+}
+.cert-lightbox__file svg { width: 13px; height: 13px; }
+.cert-lightbox__file:hover { border-color: rgb(255 255 255 / 0.5); background: rgb(255 255 255 / 0.06); }
+.cert-lightbox__close {
+  display: grid;
+  place-items: center;
+  width: 2.5rem; height: 2.5rem;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.1);
+  color: #fff;
+  transition: background-color 0.3s, transform 0.5s var(--ease-smooth);
+}
+.cert-lightbox__close svg { width: 18px; height: 18px; }
+.cert-lightbox__close:hover { background: var(--brand); transform: rotate(90deg); }
+.landing .cert-lightbox__close:focus-visible { border-radius: 50%; }
+
+.cert-lightbox__stage {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  place-items: center;
+  cursor: zoom-out;
+}
+/* Shown at its own aspect ratio, as large as the viewport allows.
+   Absolutely positioned so the max-* percentages resolve against the stage's real size. */
+.cert-lightbox__img {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  cursor: default;
+  box-shadow: 0 40px 80px -30px rgb(0 0 0 / 0.6);
+  opacity: 0;
+  transition: opacity 0.5s var(--ease-out);
+}
+.cert-lightbox[data-loaded='true'] .cert-lightbox__img { opacity: 1; }
+.cert-lightbox__spinner {
+  position: absolute;
+  width: 28px; height: 28px;
+  border: 2px solid rgb(255 255 255 / 0.2);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: cert-spin 0.8s linear infinite;
+}
+.cert-lightbox[data-loaded='true'] .cert-lightbox__spinner { display: none; }
+@keyframes cert-spin { to { transform: rotate(360deg); } }
 
 
 /* ─── CONTACT ───────────────────────────────────────────────── */
