@@ -51,7 +51,7 @@ const TAG_COLORS: Record<string, string> = {
 };
 
 const BASE_TAG = 'inline-block px-2.5 py-0.5 rounded-full text-xs font-medium border';
-const DEFAULT_TAG = 'bg-zinc-100 dark:bg-zinc-800/70 text-zinc-600 dark:text-zinc-400 border-zinc-200 dark:border-zinc-700/50';
+const DEFAULT_TAG = 'bg-zinc-100 dark:bg-white/[0.07] text-zinc-600 dark:text-zinc-400 border-zinc-200 dark:border-white/[0.12]';
 
 function tagClass(tag: string): string {
   return `${BASE_TAG} ${TAG_COLORS[tag] ?? DEFAULT_TAG}`;

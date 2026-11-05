@@ -20,6 +20,11 @@
     --ink:   20 20 18;
   }
 
+  .dark {
+    --paper: 39 48 42; /* #27302a */
+    --ink:   255 255 255;
+  }
+
   html {
     @apply scroll-smooth antialiased;
   }
@@ -30,14 +35,10 @@
     transition: background-color 0.3s ease, color 0.3s ease;
   }
 
-  /* Dark mode: rich layered gradient canvas instead of flat black */
+  /* Dark mode: flat #27302a canvas */
   .dark body {
     color: #e4e4e7;
-    background-color: #09090b;
-    background-image:
-      radial-gradient(ellipse 90% 55% at 50% -5%, rgba(139,92,246,0.12) 0%, transparent 60%),
-      radial-gradient(ellipse 55% 45% at 85% 75%, rgba(99,102,241,0.07) 0%, transparent 55%),
-      radial-gradient(ellipse 40% 35% at 10% 85%, rgba(167,139,250,0.05) 0%, transparent 50%);
+    background-color: rgb(var(--paper));
   }
 
   /* Subtle grain texture overlay — zero JS, zero render cost */
@@ -87,7 +88,7 @@
            active:scale-[0.97]
            transition-all duration-200 ease-out
            focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2
-           dark:focus-visible:ring-offset-zinc-950;
+           dark:focus-visible:ring-offset-paper;
   }
 
   .btn-ghost {
@@ -118,9 +119,9 @@
   /* TECH-COLOURED TAGS */
   .tag {
     @apply inline-block px-2.5 py-0.5 rounded-full text-xs font-medium
-           bg-zinc-100 dark:bg-zinc-800/70
+           bg-zinc-100 dark:bg-white/[0.07]
            text-zinc-600 dark:text-zinc-400
-           border border-zinc-200 dark:border-zinc-700/50;
+           border border-zinc-200 dark:border-white/[0.12];
   }
 
   /* JavaScript */

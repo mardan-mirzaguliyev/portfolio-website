@@ -48,7 +48,7 @@ const formattedUpdatedDate = updatedDate?.toLocaleDateString('en-US', {
         {title}
       </h1>
       <p class="text-zinc-500 dark:text-zinc-400 text-lg mb-5">{description}</p>
-      <div class="flex items-center gap-4 text-sm text-zinc-400 dark:text-zinc-500 pb-4 border-b border-zinc-200 dark:border-zinc-800">
+      <div class="flex items-center gap-4 text-sm text-zinc-400 dark:text-zinc-500 pb-4 border-b border-zinc-200 dark:border-white/10">
         <time datetime={pubDate.toISOString()}>Published {formattedPubDate}</time>
         {updatedDate && (
           <time datetime={updatedDate.toISOString()} class="text-zinc-400 dark:text-zinc-600">
@@ -63,12 +63,12 @@ const formattedUpdatedDate = updatedDate?.toLocaleDateString('en-US', {
                 prose-a:text-violet-600 dark:prose-a:text-violet-400
                 prose-a:no-underline hover:prose-a:underline
                 prose-code:font-mono prose-code:text-sm
-                prose-pre:rounded-xl prose-pre:border prose-pre:border-zinc-200 dark:prose-pre:border-zinc-700
+                prose-pre:rounded-xl prose-pre:border prose-pre:border-zinc-200 dark:prose-pre:border-white/[0.12]
                 prose-img:rounded-xl prose-table:text-sm">
       <Content />
     </div>
 
-    <div class="mt-14 pt-8 border-t border-zinc-200 dark:border-zinc-800">
+    <div class="mt-14 pt-8 border-t border-zinc-200 dark:border-white/10">
       <a href="/blog" class="btn-ghost">
         <svg class="h-4 w-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M13 8H3M7 4l-4 4 4 4" />

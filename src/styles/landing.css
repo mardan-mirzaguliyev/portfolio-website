@@ -19,7 +19,7 @@
 
 /* Night */
 .landing.dark {
-  --paper: 0 0 0;
+  --paper: 39 48 42; /* #27302a */
   --ink:   255 255 255;
   color-scheme: dark;
 }
