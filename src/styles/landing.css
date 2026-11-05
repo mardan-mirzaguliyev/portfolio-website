@@ -405,9 +405,7 @@ html.landing ::-webkit-scrollbar-thumb { background: rgb(var(--ink) / 0.2); }
   aspect-ratio: 3 / 4;
   overflow: hidden;
   background: rgb(10 10 10);
-  cursor: none;
 }
-@media (hover: none) { .work-card__media { cursor: pointer; } }
 
 .work-card__art {
   position: absolute;
@@ -454,29 +452,6 @@ html.landing ::-webkit-scrollbar-thumb { background: rgb(var(--ink) / 0.2); }
   background: linear-gradient(165deg, #01133d 0%, #015FFC 42%, #a7d4ff 66%, #060606 100%);
 }
 .work-art--2::after { background: radial-gradient(rgb(255 255 255 / 0.22) 1px, transparent 1.6px) 0 0 / 18px 18px; mix-blend-mode: overlay; }
-
-/* "View" bubble follows the cursor across the card */
-.work-card__cta {
-  position: absolute;
-  left: 50%; top: 50%;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.35rem;
-  width: 6.5rem; height: 6.5rem;
-  border-radius: 50%;
-  background: var(--brand);
-  color: #fff;
-  font-size: 13px;
-  font-weight: 500;
-  pointer-events: none;
-  transform: translate(-50%, -50%) translate(var(--cx, 0px), var(--cy, 0px)) scale(0);
-  transition: transform 0.55s var(--ease-out);
-}
-.work-card__cta svg { width: 14px; height: 14px; }
-.work-card__media:hover .work-card__cta,
-.work-card:focus-visible .work-card__cta { transform: translate(-50%, -50%) translate(var(--cx, 0px), var(--cy, 0px)) scale(1); }
 
 .work-card__title {
   display: inline;

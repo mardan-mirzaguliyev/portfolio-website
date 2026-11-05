@@ -113,15 +113,6 @@ const featured = (await getCollection('projects'))
       hero.style.setProperty('--my', String((e.clientY - r.top) / r.height - 0.5));
     });
 
-    // "View" bubble tracks the cursor inside each work card
-    document.querySelectorAll<HTMLElement>('[data-cursor-area]').forEach((area) => {
-      area.addEventListener('pointermove', (e) => {
-        const r = area.getBoundingClientRect();
-        area.style.setProperty('--cx', `${e.clientX - r.left - r.width / 2}px`);
-        area.style.setProperty('--cy', `${e.clientY - r.top - r.height / 2}px`);
-      });
-    });
-
     // Magnetic buttons lean toward the cursor
     document.querySelectorAll<HTMLElement>('[data-magnetic]').forEach((el) => {
       el.addEventListener('pointermove', (e) => {
