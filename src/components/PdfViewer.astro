@@ -1,0 +1,60 @@
+---
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
+
+interface Props {
+  /** Path under public/, e.g. '/assets/docs/teaching-philosophy.pdf' */
+  src: string;
+  title: string;
+  label?: string;
+}
+
+const { src, title, label = 'Document preview' } = Astro.props;
+
+// Until the file is in public/, show a placeholder instead of an empty frame
+const hasFile = existsSync(join(process.cwd(), 'public', src));
+if (!hasFile) console.warn(`[pdf-viewer] "${title}": no file at public${src} — showing placeholder`);
+
+// Fit the page width, hide the browser's own PDF toolbar
+const viewerSrc = `${src}#toolbar=0&view=FitH`;
+---
+
+<figure class="pdf-viewer reveal">
+  <figcaption class="pdf-viewer__bar">
+    <div class="min-w-0">
+      <p class="eyebrow flex items-center gap-4">
+        <span class="h-px w-10 bg-ink/40" aria-hidden="true"></span>
+        {label}
+      </p>
+      <p class="mt-3 truncate font-display text-xl font-medium tracking-[-0.02em] sm:text-2xl">{title}</p>
+    </div>
+    {hasFile && (
+      <a href={src} target="_blank" rel="noopener noreferrer" class="cert-verify !mt-0 shrink-0" aria-label={`Open ${title} in a new tab`}>
+        Open PDF in New Tab
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg>
+      </a>
+    )}
+  </figcaption>
+
+  <div class="pdf-viewer__viewport">
+    {hasFile ? (
+      <!-- <object> rather than <iframe>: browsers that can't show PDFs inline (e.g. Chrome on Android) render the fallback instead of a blank box -->
+      <object data={viewerSrc} type="application/pdf" class="h-full w-full" aria-label={title}>
+        <div class="pdf-viewer__fallback">
+          <p class="text-base text-ink/70">This browser can't display the PDF here.</p>
+          <a href={src} target="_blank" rel="noopener noreferrer" class="cert-verify">
+            Open the PDF
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg>
+          </a>
+        </div>
+      </object>
+    ) : (
+      <div class="pdf-viewer__fallback" aria-hidden="true">
+        <svg class="h-14 w-14 text-ink/15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" /><path d="M14 3v5h5M9 13h6M9 17h4" />
+        </svg>
+        <p class="text-sm text-ink/45">Document coming soon</p>
+      </div>
+    )}
+  </div>
+</figure>
