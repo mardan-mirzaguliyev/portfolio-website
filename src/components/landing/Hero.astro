@@ -1,0 +1,46 @@
+---
+const headline = ['Mardan', 'Mirzaguliyev'];
+---
+
+<section id="top" class="hero relative isolate h-[100svh] min-h-[600px] w-full overflow-hidden bg-black" data-hero>
+
+  <!-- Abstract gradient field — moves at a slower rate than the page (parallax) -->
+  <div class="hero-bg" data-parallax-bg aria-hidden="true">
+    <div class="hero-blobs">
+      <div class="hero-blob hero-blob--1"></div>
+      <div class="hero-blob hero-blob--2"></div>
+      <div class="hero-blob hero-blob--3"></div>
+      <div class="hero-blob hero-blob--4"></div>
+    </div>
+  </div>
+  <div class="hero-grain" aria-hidden="true"></div>
+  <div class="hero-vignette" aria-hidden="true"></div>
+
+  <div class="hero-content relative z-10 flex h-full flex-col justify-end px-6 pb-8 sm:px-10 sm:pb-12 lg:px-16" data-parallax-content>
+
+    <p class="hero-fade eyebrow mb-8 flex items-center gap-4 !text-white/60" style="--d:200ms">
+      <span class="h-px w-10 bg-white/40" aria-hidden="true"></span>
+      Data Analyst — Azerbaijan
+    </p>
+
+    <h1 class="font-display font-semibold text-white leading-[0.86] tracking-[-0.055em] text-[clamp(3rem,12.5vw,13rem)]">
+      {headline.map((line, i) => (
+        <span class="hero-line">
+          <span class="hero-line__inner" style={`--d:${320 + i * 130}ms`}>
+            {line}{i === headline.length - 1 && <span class="text-brand">.</span>}
+          </span>
+        </span>
+      ))}
+    </h1>
+
+    <div class="hero-fade mt-10 sm:mt-14 flex items-end justify-between gap-8 border-t border-white/15 pt-6" style="--d:850ms">
+      <p class="max-w-md text-base sm:text-lg leading-relaxed text-white/70">
+        I turn text, numbers and noise into clear visual narratives — where data science meets design.
+      </p>
+      <a href="#intro" class="scroll-cue shrink-0" aria-label="Scroll to content">
+        <span class="scroll-cue__label">Scroll</span>
+        <span class="scroll-cue__track" aria-hidden="true"><span class="scroll-cue__dot"></span></span>
+      </a>
+    </div>
+  </div>
+</section>

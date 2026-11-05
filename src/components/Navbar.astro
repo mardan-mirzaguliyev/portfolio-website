@@ -121,16 +121,19 @@ const currentPath = Astro.url.pathname;
 </header>
 
 <script>
-  const btn   = document.getElementById('mobile-menu-btn')!;
-  const menu  = document.getElementById('mobile-menu')!;
-  const open  = document.getElementById('menu-icon-open')!;
-  const close = document.getElementById('menu-icon-close')!;
+  const btn   = document.getElementById('mobile-menu-btn');
+  const menu  = document.getElementById('mobile-menu');
+  const open  = document.getElementById('menu-icon-open');
+  const close = document.getElementById('menu-icon-close');
 
-  btn.addEventListener('click', () => {
-    const expanded = btn.getAttribute('aria-expanded') === 'true';
-    btn.setAttribute('aria-expanded', String(!expanded));
-    menu.classList.toggle('hidden');
-    open.classList.toggle('hidden');
-    close.classList.toggle('hidden');
-  });
+  // Astro bundles this script on every page that imports the layout — bail where the navbar isn't rendered
+  if (btn && menu && open && close) {
+    btn.addEventListener('click', () => {
+      const expanded = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', String(!expanded));
+      menu.classList.toggle('hidden');
+      open.classList.toggle('hidden');
+      close.classList.toggle('hidden');
+    });
+  }
 </script>

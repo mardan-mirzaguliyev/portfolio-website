@@ -6,9 +6,11 @@ export default {
     extend: {
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
+        display: ['"Inter Tight"', 'Inter', 'system-ui', 'sans-serif'],
         mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
       },
       colors: {
+        brand: '#015FFC',
         surface: {
           50:  'rgb(var(--color-surface-50) / <alpha-value>)',
           100: 'rgb(var(--color-surface-100) / <alpha-value>)',

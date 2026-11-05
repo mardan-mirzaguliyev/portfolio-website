@@ -42,23 +42,26 @@
 </button>
 
 <script>
-  const toggle = document.getElementById('theme-toggle')!;
-  const sun    = document.getElementById('icon-sun')!;
-  const moon   = document.getElementById('icon-moon')!;
+  const toggle = document.getElementById('theme-toggle');
+  const sun    = document.getElementById('icon-sun');
+  const moon   = document.getElementById('icon-moon');
 
-  function applyTheme(dark: boolean) {
-    document.documentElement.classList.toggle('dark', dark);
-    sun.classList.toggle('hidden', !dark);
-    moon.classList.toggle('hidden', dark);
+  // Astro bundles this script on every page that imports the layout — bail where the toggle isn't rendered
+  if (toggle && sun && moon) {
+    const applyTheme = (dark: boolean) => {
+      document.documentElement.classList.toggle('dark', dark);
+      sun.classList.toggle('hidden', !dark);
+      moon.classList.toggle('hidden', dark);
+    };
+
+    // Sync with current DOM state set by the blocking head script
+    applyTheme(document.documentElement.classList.contains('dark'));
+
+    toggle.addEventListener('click', () => {
+      const isDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      sun.classList.toggle('hidden', !isDark);
+      moon.classList.toggle('hidden', isDark);
+    });
   }
-
-  // Sync with current DOM state set by the blocking head script
-  applyTheme(document.documentElement.classList.contains('dark'));
-
-  toggle.addEventListener('click', () => {
-    const isDark = document.documentElement.classList.toggle('dark');
-    localStorage.setItem('theme', isDark ? 'dark' : 'light');
-    sun.classList.toggle('hidden', !isDark);
-    moon.classList.toggle('hidden', isDark);
-  });
 </script>

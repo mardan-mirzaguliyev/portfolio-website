@@ -10,6 +10,8 @@ interface Props {
   noIndex?: boolean;
   type?: 'website' | 'article';
   pubDate?: Date;
+  /** 'landing' renders a bare, always-dark shell — the page supplies its own nav via slot="header" */
+  variant?: 'default' | 'landing';
 }
 
 const {
@@ -19,7 +21,10 @@ const {
   noIndex = false,
   type = 'website',
   pubDate,
+  variant = 'default',
 } = Astro.props;
+
+const isLanding = variant === 'landing';
 
 const siteUrl   = Astro.site ?? new URL('https://mmardan.com');
 const canonical = new URL(Astro.url.pathname, siteUrl).href;
@@ -28,20 +33,25 @@ const pageTitle = title === 'Home' ? 'Mardan Mirzaguliyev — Data Analyst' : `$
 ---
 
 <!doctype html>
-<html lang="en" class="dark">
+<html lang="en" class={isLanding ? 'landing' : 'dark'}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <!-- BLOCKING theme script — runs before first paint to prevent flash -->
-    <script is:inline>
-      (function () {
-        var stored = localStorage.getItem('theme');
-        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        var dark = stored === 'dark' || (!stored && prefersDark);
-        document.documentElement.classList.toggle('dark', dark);
-      })();
-    </script>
+    {isLanding ? (
+      <!-- Flags JS support so scroll-reveal styles only hide content when they can un-hide it -->
+      <script is:inline>document.documentElement.classList.add('js');</script>
+    ) : (
+      <!-- BLOCKING theme script — runs before first paint to prevent flash -->
+      <script is:inline>
+        (function () {
+          var stored = localStorage.getItem('theme');
+          var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          var dark = stored === 'dark' || (!stored && prefersDark);
+          document.documentElement.classList.toggle('dark', dark);
+        })();
+      </script>
+    )}
 
     <!-- Primary meta -->
     <title>{pageTitle}</title>
@@ -74,13 +84,16 @@ const pageTitle = title === 'Home' ? 'Mardan Mirzaguliyev — Data Analyst' : `$
     <meta name="generator" content={Astro.generator} />
   </head>
 
-  <body class="min-h-screen flex flex-col text-zinc-900 dark:text-zinc-100">
+  <body class:list={[
+    'min-h-screen',
+    isLanding ? 'bg-black text-white' : 'flex flex-col text-zinc-900 dark:text-zinc-100',
+  ]}>
 
     <!--
       Ambient radial glow orbs — fixed behind all content.
       Pure CSS, pointer-events-none, no JS, no layout cost.
     -->
-    <div aria-hidden="true" class="pointer-events-none fixed inset-0 overflow-hidden -z-10">
+    {!isLanding && <div aria-hidden="true" class="pointer-events-none fixed inset-0 overflow-hidden -z-10">
       <!-- Primary violet orb — top-center -->
       <div class="
         absolute -top-48 left-1/2 -translate-x-1/2
@@ -104,14 +117,14 @@ const pageTitle = title === 'Home' ? 'Mardan Mirzaguliyev — Data Analyst' : `$
         bg-fuchsia-600/[0.04] dark:bg-fuchsia-500/[0.05]
         blur-[90px]
       "></div>
-    </div>
+    </div>}
 
-    <Navbar />
+    {isLanding ? <slot name="header" /> : <Navbar />}
 
-    <main id="main-content" class="flex-1">
+    <main id="main-content" class:list={[!isLanding && 'flex-1']}>
       <slot />
     </main>
 
-    <Footer />
+    {!isLanding && <Footer />}
   </body>
 </html>

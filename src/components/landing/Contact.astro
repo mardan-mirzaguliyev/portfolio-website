@@ -1,0 +1,68 @@
+---
+const year = new Date().getFullYear();
+---
+
+<section id="contact" class="relative isolate scroll-mt-20 overflow-hidden bg-black px-6 pt-40 sm:px-10 sm:pt-56 lg:px-16">
+
+  <div aria-hidden="true" class="contact-glow"></div>
+
+  <p class="eyebrow reveal mb-10">(04) — Contact</p>
+
+  <h2 class="reveal font-display text-[clamp(3rem,10.5vw,11rem)] font-semibold leading-[0.88] tracking-[-0.055em]">
+    Let's make<br />
+    <span class="text-white/30">something</span> clear<span class="text-brand">.</span>
+  </h2>
+
+  <div class="mt-20 grid gap-16 lg:mt-28 lg:grid-cols-12">
+    <p class="reveal max-w-sm text-lg leading-relaxed text-white/55 lg:col-span-4">
+      A dataset with a story to tell, a role to discuss, or just saying hi — leave your details and
+      I'll get back to you within 24 hours.
+    </p>
+
+    <form
+      name="landing-contact"
+      method="POST"
+      data-netlify="true"
+      data-netlify-honeypot="bot-field"
+      action="/thanks"
+      class="contact-form reveal lg:col-span-7 lg:col-start-6"
+      style="--reveal-delay:120ms"
+    >
+      <input type="hidden" name="form-name" value="landing-contact" />
+      <div class="hidden" aria-hidden="true">
+        <label>Don't fill this out: <input name="bot-field" tabindex="-1" autocomplete="off" /></label>
+      </div>
+
+      <div class="grid gap-12 sm:grid-cols-2 sm:gap-10">
+        <div class="field">
+          <input id="lc-name" name="name" type="text" required autocomplete="name" placeholder=" " class="field__input" />
+          <label for="lc-name" class="field__label">Your name</label>
+          <span class="field__line" aria-hidden="true"></span>
+        </div>
+        <div class="field">
+          <input id="lc-email" name="email" type="email" required autocomplete="email" placeholder=" " class="field__input" />
+          <label for="lc-email" class="field__label">Email address</label>
+          <span class="field__line" aria-hidden="true"></span>
+        </div>
+      </div>
+
+      <div class="mt-14 flex items-center justify-between gap-6">
+        <p class="max-w-[15rem] text-xs leading-relaxed text-white/35">
+          No spam, ever. Your details are never shared with third parties.
+        </p>
+        <button type="submit" class="submit-btn" data-magnetic>
+          <span class="submit-btn__label">
+            Send
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+          </span>
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <footer class="eyebrow mt-40 flex flex-col gap-5 border-t border-white/10 py-8 sm:mt-56 sm:flex-row sm:items-center sm:justify-between">
+    <span>&copy; {year} Mardan Mirzaguliyev</span>
+    <span class="hidden sm:inline">Data · Text · Visualisation</span>
+    <a href="#top" class="text-link self-start sm:self-auto">Back to top</a>
+  </footer>
+</section>
