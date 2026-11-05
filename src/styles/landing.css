@@ -7,6 +7,8 @@
   --brand: #015FFC;
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  /* Long, soft deceleration used for every entrance and reveal */
+  --ease-smooth: cubic-bezier(0.25, 1, 0.5, 1);
   scrollbar-color: rgb(255 255 255 / 0.18) #000;
   background: #000;
 }
@@ -55,7 +57,12 @@
     backdrop-filter 0.5s var(--ease-out),
     transform 0.7s var(--ease-out);
 }
-.landing-nav__bar { height: 5rem; transition: height 0.5s var(--ease-out); }
+.landing-nav__bar {
+  height: 5rem;
+  transition: height 0.5s var(--ease-out);
+  animation: nav-enter 1.4s var(--ease-smooth) 900ms both;
+}
+@keyframes nav-enter { from { opacity: 0; translate: 0 -12px; } }
 
 .landing-nav[data-scrolled='true'] {
   background: rgb(0 0 0 / 0.72);
@@ -153,7 +160,10 @@
   inset: 0;
   transform: translate3d(calc(var(--mx, 0) * -36px), calc(var(--my, 0) * -36px), 0);
   transition: transform 1.6s var(--ease-out);
+  /* Uses the standalone scale property so it composes with the pointer-drift transform */
+  animation: hero-bg-enter 2.6s var(--ease-smooth) both;
 }
+@keyframes hero-bg-enter { from { opacity: 0; scale: 1.12; } }
 .hero-blob { position: absolute; border-radius: 50%; mix-blend-mode: screen; will-change: transform; }
 .hero-blob--1 {
   width: 72vmax; height: 72vmax; left: -18vmax; top: -26vmax;
@@ -197,17 +207,31 @@
 }
 .hero-content { will-change: transform, opacity; }
 
-/* Headline lines rise out of a mask */
-.hero-line { display: block; overflow: hidden; padding-bottom: 0.06em; margin-bottom: -0.06em; }
-.hero-line__inner {
-  display: block;
-  transform: translateY(108%);
-  animation: rise 1.5s var(--ease-out) var(--d, 0ms) forwards;
+/* Load sequence: fade in, rise and scale up, staggered by --d */
+.hero-enter {
+  opacity: 0;
+  transform: translate3d(0, 32px, 0) scale(0.96);
+  transform-origin: left bottom;
+  animation: hero-enter 1.8s var(--ease-smooth) var(--d, 0ms) forwards;
 }
-@keyframes rise { to { transform: none; } }
+@keyframes hero-enter { to { opacity: 1; transform: none; } }
 
-.hero-fade { opacity: 0; transform: translateY(14px); animation: fade-up 1.2s var(--ease-out) var(--d, 0ms) forwards; }
-@keyframes fade-up { to { opacity: 1; transform: none; } }
+/* Hairline above the bio draws in from the left */
+.hero-rule {
+  position: absolute;
+  left: 0; right: 0; top: 0;
+  height: 1px;
+  background: rgb(255 255 255 / 0.15);
+  transform: scaleX(0);
+  transform-origin: left;
+  animation: hero-rule 2s var(--ease-smooth) var(--d, 0ms) forwards;
+}
+@keyframes hero-rule { to { transform: scaleX(1); } }
+
+/* Hold the sequence until web fonts are ready so nothing reflows mid-animation */
+.js:not(.is-loaded) :is(.hero-enter, .hero-rule, .hero-blobs, .landing-nav__bar) {
+  animation-play-state: paused;
+}
 
 /* Scroll indicator */
 .scroll-cue { display: flex; flex-direction: column; align-items: center; gap: 0.9rem; color: rgb(255 255 255 / 0.6); transition: color 0.3s; }
@@ -227,19 +251,21 @@
 }
 
 
-/* ─── SCROLL REVEALS (only hide when JS can reveal) ─────────── */
+/* ─── SCROLL REVEALS (only hide when JS can reveal) ─────────────
+   --reveal-delay is authored inline; --stagger is set by JS for
+   elements that enter the viewport together.                     */
 .js .reveal {
   opacity: 0;
-  transform: translateY(32px);
-  transition: opacity 1.2s var(--ease-out), transform 1.2s var(--ease-out);
-  transition-delay: var(--reveal-delay, 0ms);
+  transform: translate3d(0, 28px, 0);
+  transition: opacity 1.4s var(--ease-smooth), transform 1.6s var(--ease-smooth);
+  transition-delay: calc(var(--reveal-delay, 0ms) + var(--stagger, 0ms));
 }
 .js .reveal.is-visible { opacity: 1; transform: none; }
 
 .js .reveal-clip {
   clip-path: inset(100% 0 0 0);
-  transition: clip-path 1.4s var(--ease-out);
-  transition-delay: calc(var(--reveal-delay, 0ms) + 150ms);
+  transition: clip-path 1.6s var(--ease-smooth);
+  transition-delay: calc(var(--reveal-delay, 0ms) + var(--stagger, 0ms) + 150ms);
 }
 .js .reveal-clip.is-visible { clip-path: inset(0 0 0 0); }
 

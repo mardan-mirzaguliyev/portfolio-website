@@ -29,27 +29,45 @@ const featured = (await getCollection('projects'))
   const finePointer  = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
   const clamp = (v: number, min: number, max: number) => Math.min(max, Math.max(min, v));
 
+  // ── Load sequence: release the hero entrance once fonts are in (or after 1.2s at worst)
+  Promise.race([document.fonts.ready, new Promise((r) => setTimeout(r, 1200))]).then(() => {
+    requestAnimationFrame(() => document.documentElement.classList.add('is-loaded'));
+  });
+
   // ── Scroll reveals ─────────────────────────────────────────
+  // Elements entering in the same frame cascade top-to-bottom, left-to-right
+  const STAGGER_MS = 110;
   const io = new IntersectionObserver((entries) => {
-    for (const entry of entries) {
-      if (!entry.isIntersecting) continue;
-      entry.target.classList.add('is-visible');
-      io.unobserve(entry.target);
-    }
-  }, { rootMargin: '0px 0px -12% 0px' });
+    entries
+      .filter((entry) => entry.isIntersecting)
+      .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top || a.boundingClientRect.left - b.boundingClientRect.left)
+      .forEach((entry, i) => {
+        const el = entry.target as HTMLElement;
+        el.style.setProperty('--stagger', `${i * STAGGER_MS}ms`);
+        el.classList.add('is-visible');
+        io.unobserve(el);
+      });
+  }, { rootMargin: '0px 0px -10% 0px' });
   document.querySelectorAll('.reveal, .reveal-clip').forEach((el) => io.observe(el));
 
-  // ── Hero parallax + intro word highlight (one rAF per scroll) ─
+  // ── Hero parallax + intro word highlight ───────────────────
+  // Parallax eases toward the scroll position rather than snapping to it
   const hero        = document.querySelector<HTMLElement>('[data-hero]');
   const heroBg      = document.querySelector<HTMLElement>('[data-parallax-bg]');
   const heroContent = document.querySelector<HTMLElement>('[data-parallax-content]');
   const introText   = document.querySelector<HTMLElement>('[data-intro-words]');
   const introWords  = introText ? Array.from(introText.querySelectorAll<HTMLElement>('.intro-word')) : [];
 
-  let ticking = false;
+  const LERP = 0.12;
+  let smoothY = window.scrollY;
+  let rafId = 0;
+
   function onFrame() {
-    ticking = false;
-    const y  = window.scrollY;
+    const targetY = window.scrollY;
+    smoothY += (targetY - smoothY) * LERP;
+    if (Math.abs(targetY - smoothY) < 0.1) smoothY = targetY;
+
+    const y  = smoothY;
     const vh = window.innerHeight;
 
     if (y < vh * 1.2) {
@@ -71,13 +89,16 @@ const featured = (await getCollection('projects'))
         word.style.opacity = String(0.15 + 0.85 * clamp(lit - i, 0, 1));
       });
     }
+
+    // Keep stepping until the eased value settles, then go idle
+    rafId = smoothY !== targetY ? requestAnimationFrame(onFrame) : 0;
   }
 
+  const requestFrame = () => { if (!rafId) rafId = requestAnimationFrame(onFrame); };
+
   if (!reduceMotion) {
-    window.addEventListener('scroll', () => {
-      if (!ticking) { ticking = true; requestAnimationFrame(onFrame); }
-    }, { passive: true });
-    window.addEventListener('resize', onFrame);
+    window.addEventListener('scroll', requestFrame, { passive: true });
+    window.addEventListener('resize', requestFrame);
     onFrame();
   }
 
