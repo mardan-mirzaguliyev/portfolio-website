@@ -12,6 +12,12 @@
   status = 301
   force  = true
 
+# Project renamed: The Narratives in Graphs → Visage Quant (keep before the 404 catch-all)
+[[redirects]]
+  from   = "/projects/narratives-in-graphs"
+  to     = "/projects/visage-quant"
+  status = 301
+
 # SPA-style 404 fallback (Astro handles 404.astro but this is a safety net)
 [[redirects]]
   from   = "/*"
