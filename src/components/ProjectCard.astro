@@ -80,41 +80,43 @@ const isLarge = size === 'large';
         : 'aspect-video',
     ]}
   >
-    {/* Subtle CSS grid overlay */}
-    <div class="absolute inset-0 opacity-[0.07]"
-         style="background-image: linear-gradient(to right, rgb(167 139 250 / 1) 1px, transparent 1px), linear-gradient(to bottom, rgb(167 139 250 / 1) 1px, transparent 1px); background-size: 32px 32px;"></div>
+    {logo ? (
+      /* Logo fills the media area like a thumbnail */
+      <Image
+        src={logo}
+        alt={`${title} logo`}
+        widths={[480, 720, 1080]}
+        sizes={isLarge ? '(min-width: 640px) 40vw, 100vw' : '(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw'}
+        class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+      />
+    ) : (
+      <>
+      {/* Subtle CSS grid overlay */}
+      <div class="absolute inset-0 opacity-[0.07]"
+           style="background-image: linear-gradient(to right, rgb(167 139 250 / 1) 1px, transparent 1px), linear-gradient(to bottom, rgb(167 139 250 / 1) 1px, transparent 1px); background-size: 32px 32px;"></div>
 
-    <div class="absolute inset-0 flex flex-col items-center justify-center gap-3">
-      {/* Animated radial glow */}
-      <div class:list={[
-        'absolute rounded-full bg-violet-500/20 blur-3xl transition-all duration-500 group-hover:bg-violet-500/30',
-        isLarge ? 'h-48 w-48' : 'h-28 w-28',
-      ]}></div>
-      {logo ? (
-        <Image
-          src={logo}
-          alt={`${title} logo`}
-          class:list={[
-            'relative object-contain drop-shadow-lg',
-            isLarge ? 'h-28 w-28' : 'h-16 w-16',
-          ]}
-        />
-      ) : (
+      <div class="absolute inset-0 flex flex-col items-center justify-center gap-3">
+        {/* Animated radial glow */}
+        <div class:list={[
+          'absolute rounded-full bg-violet-500/20 blur-3xl transition-all duration-500 group-hover:bg-violet-500/30',
+          isLarge ? 'h-48 w-48' : 'h-28 w-28',
+        ]}></div>
         <span class:list={[
           'relative font-extrabold text-violet-300/25 select-none tracking-tight group-hover:text-violet-300/40 transition-colors duration-300',
           isLarge ? 'text-[7rem]' : 'text-5xl',
         ]}>
           {title.charAt(0)}
         </span>
-      )}
-      {tags[0] && (
-        <span class="relative text-[10px] font-semibold tracking-widest uppercase px-2.5 py-1 rounded-full
-                     bg-violet-500/15 text-violet-300/70 border border-violet-400/20
-                     group-hover:bg-violet-500/25 group-hover:text-violet-300/90 transition-all duration-300">
-          {tags[0]}
-        </span>
-      )}
-    </div>
+        {tags[0] && (
+          <span class="relative text-[10px] font-semibold tracking-widest uppercase px-2.5 py-1 rounded-full
+                       bg-violet-500/15 text-violet-300/70 border border-violet-400/20
+                       group-hover:bg-violet-500/25 group-hover:text-violet-300/90 transition-all duration-300">
+            {tags[0]}
+          </span>
+        )}
+      </div>
+      </>
+    )}
   </a>
 
   <!-- ── Card body ────────────────────────────────────────── -->
