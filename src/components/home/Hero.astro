@@ -1,5 +1,6 @@
 ---
-const headline = ['Mardan', 'Mirzaguliyev'];
+// One title, split into lines for the staggered entrance. The full stop is drawn as the brand dot.
+const headline = ['Mardan Mirzaguliyev —', 'TESOL Certified English Teacher', '& Data Analyst'];
 ---
 
 <section class="hero relative isolate h-[100svh] min-h-[600px] w-full overflow-hidden bg-paper" data-hero>
@@ -19,14 +20,9 @@ const headline = ['Mardan', 'Mirzaguliyev'];
   <!-- Each element enters on its own --d delay for a staggered load sequence -->
   <div class="hero-content relative z-10 flex h-full flex-col justify-end px-6 pb-8 sm:px-10 sm:pb-12 lg:px-16" data-parallax-content>
 
-    <p class="hero-enter eyebrow mb-8 flex items-center gap-4 !text-ink/60" style="--d:150ms">
-      <span class="h-px w-10 bg-ink/40" aria-hidden="true"></span>
-      Data Analyst — Azerbaijan
-    </p>
-
-    <h1 class="font-display font-semibold text-ink leading-[0.86] tracking-[-0.055em] text-[clamp(3rem,12.5vw,13rem)]">
+    <h1 class="max-w-[16ch] font-display font-semibold text-ink leading-[0.92] tracking-[-0.05em] text-[clamp(2.6rem,6.4vw,7.25rem)] sm:max-w-none">
       {headline.map((line, i) => (
-        <span class="hero-enter block pb-[0.06em] -mb-[0.06em]" style={`--d:${300 + i * 120}ms`}>
+        <span class="hero-enter block pb-[0.06em] -mb-[0.06em]" style={`--d:${200 + i * 120}ms`}>
           {line}{i === headline.length - 1 && <span class="text-brand">.</span>}
         </span>
       ))}

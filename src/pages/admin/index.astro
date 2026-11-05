@@ -1,0 +1,20 @@
+---
+// Decap CMS dashboard. Deliberately not wrapped in BaseLayout: the CMS is a full-page React app
+// with its own styles. Collections and fields are defined in public/admin/config.yml.
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Content Manager · mmardan</title>
+    <!-- Absolute path, so /admin and /admin/ both find the config -->
+    <link href="/admin/config.yml" type="text/yaml" rel="cms-config-url" />
+  </head>
+  <body>
+    <!-- Pinned to the 3.x line; bump deliberately after reading Decap's release notes -->
+    <script is:inline src="https://unpkg.com/decap-cms@3.17.3/dist/decap-cms.js"></script>
+  </body>
+</html>

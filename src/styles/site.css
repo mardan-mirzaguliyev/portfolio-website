@@ -103,13 +103,6 @@ body { background: rgb(var(--paper)); }
 }
 .roll-link:hover .roll-link__inner { transform: translateY(-100%); }
 
-/* Soft pulsing ring — in-progress status dot */
-@keyframes pill-pulse {
-  0%   { box-shadow: 0 0 0 0 rgb(1 95 252 / 0.6); }
-  70%  { box-shadow: 0 0 0 8px rgb(1 95 252 / 0); }
-  100% { box-shadow: 0 0 0 0 rgb(1 95 252 / 0); }
-}
-
 /* Night-mode switch: knob slides across, sun turns into moon */
 .theme-switch {
   position: relative;
@@ -557,20 +550,6 @@ body { background: rgb(var(--paper)); }
 }
 .cert-badge svg { width: 14px; height: 14px; flex-shrink: 0; }
 .cert-card:hover .cert-badge { color: var(--brand); border-color: rgb(1 95 252 / 0.4); }
-
-.cert-status {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--brand);
-}
-.cert-status__dot {
-  width: 6px; height: 6px; border-radius: 50%;
-  background: currentColor;
-  animation: pill-pulse 2.4s ease-out infinite;
-}
 
 /* Small mono chip — skills, tech stack, post tags */
 .chip {

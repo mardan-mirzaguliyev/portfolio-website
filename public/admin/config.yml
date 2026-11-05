@@ -1,0 +1,134 @@
+# Decap CMS — content manager at /admin
+# Field names here must match the schemas in src/content/config.ts.
+# Docs: https://decapcms.org/docs/configuration-options/
+
+backend:
+  name: github
+  repo: mardan-mirzaguliyev/portfolio-website
+  branch: main
+  # Login goes through Netlify's GitHub OAuth provider (Site configuration → Access & security → OAuth).
+  # Only GitHub accounts with write access to the repo can sign in.
+  base_url: https://api.netlify.com
+  commit_messages:
+    create: 'Added {{collection}} "{{slug}}" via CMS'
+    update: 'Updated {{collection}} "{{slug}}" via CMS'
+    delete: 'Deleted {{collection}} "{{slug}}" via CMS'
+    uploadMedia: 'Uploaded "{{path}}" via CMS'
+    deleteMedia: 'Deleted "{{path}}" via CMS'
+
+# `npm run cms` + `npm run dev` → edits on localhost write straight to your working copy, no login
+local_backend: true
+
+# Default upload location; each collection below overrides it with a path relative to its entries,
+# which is the form Astro's image() schema expects (e.g. ../../assets/images/certificates/x.jpg).
+media_folder: src/assets/images
+public_folder: /src/assets/images
+
+# Once the site has its real domain, add it here so the CMS links back to the live site:
+# site_url: https://mmardan.com
+# display_url: https://mmardan.com
+
+collections:
+  # ── Certifications ───────────────────────────────────────────
+  - name: certifications
+    label: Certifications
+    label_singular: Certification
+    description: Shown in the Certifications section on the homepage, newest first.
+    folder: src/content/certifications
+    create: true
+    delete: true
+    slug: '{{slug}}'
+    identifier_field: title
+    summary: '{{title}} — {{issuer}} ({{date}})'
+    sortable_fields: [title, date, issuer]
+    media_folder: ../../assets/images/certificates
+    public_folder: ../../assets/images/certificates
+    fields:
+      - { label: Title, name: title, widget: string }
+      - { label: Issuer, name: issuer, widget: string }
+      - label: Date / Year
+        name: date
+        widget: string
+        hint: 'YYYY, YYYY-MM or YYYY-MM-DD — e.g. 2026 or 2026-10'
+        pattern: ['^\d{4}(-\d{2}(-\d{2})?)?$', 'Use YYYY, YYYY-MM or YYYY-MM-DD']
+      - label: Category
+        name: category
+        widget: select
+        options:
+          - { label: Data Science, value: Data Science }
+          - { label: Teaching & Linguistics, value: Teaching & Linguistics }
+          - { label: Web Dev, value: Web Development }
+      - label: Certificate Image
+        name: image
+        widget: image
+        required: false
+        choose_url: false
+        hint: The original scan or PDF export as JPG/PNG — full margins, signatures and logos. Opens full size in the lightbox.
+      - label: Credential URL
+        name: credentialUrl
+        widget: string
+        required: false
+        hint: Public verification page. Leave empty if the issuer has none, and fill in the certificate number instead.
+        pattern: ['^https?://.+', 'Must start with http:// or https://']
+      - { label: Certificate Number, name: credentialId, widget: string, required: false }
+      - { label: Skills, name: skills, widget: list, hint: 'Comma-separated, 2–4 work best', default: [] }
+      - { label: Featured, name: featured, widget: boolean, default: false }
+
+  # ── Projects ─────────────────────────────────────────────────
+  - name: projects
+    label: Projects
+    label_singular: Project
+    description: Listed on /projects, each with its own case-study page.
+    folder: src/content/projects
+    create: true
+    delete: true
+    slug: '{{slug}}'
+    summary: '{{title}}'
+    sortable_fields: [title]
+    media_folder: ../../assets/images/projects
+    public_folder: ../../assets/images/projects
+    fields:
+      - { label: Title, name: title, widget: string }
+      - { label: Description, name: description, widget: text, hint: One or two sentences — shown on the project card. }
+      - { label: Tech Stack, name: tags, widget: list, hint: 'Comma-separated, e.g. R, ggplot2, Shiny', default: [] }
+      - { label: Project Image, name: logo, widget: image, required: false, choose_url: false }
+      - label: Live URL
+        name: liveUrl
+        widget: string
+        required: false
+        pattern: ['^https?://.+', 'Must start with http:// or https://']
+      - label: GitHub URL
+        name: repositoryUrl
+        widget: string
+        required: false
+        pattern: ['^https?://.+', 'Must start with http:// or https://']
+      - { label: Featured, name: featured, widget: boolean, default: false }
+      - { label: Case Study, name: body, widget: markdown, required: false }
+
+  # ── Blog ─────────────────────────────────────────────────────
+  - name: blog
+    label: Blog
+    label_singular: Post
+    description: Posts on /blog. Drafts are saved but not published on the site.
+    folder: src/content/blog
+    create: true
+    delete: true
+    slug: '{{slug}}'
+    summary: '{{title}} — {{pubDate}}{{draft | ternary(" · draft", "")}}'
+    sortable_fields: [title, pubDate]
+    media_folder: ../../assets/images/blog
+    public_folder: ../../assets/images/blog
+    fields:
+      - { label: Title, name: title, widget: string }
+      - label: Publish Date
+        name: pubDate
+        widget: datetime
+        format: YYYY-MM-DD
+        date_format: YYYY-MM-DD
+        time_format: false
+        default: '{{now}}'
+      - { label: Cover Image, name: cover, widget: image, required: false, choose_url: false }
+      - { label: Excerpt, name: description, widget: text, hint: Shown in the post list and search results. }
+      - { label: Tags, name: tags, widget: list, default: [] }
+      - { label: Draft, name: draft, widget: boolean, default: false, hint: Drafts are hidden from the site. }
+      - { label: Body, name: body, widget: markdown }
