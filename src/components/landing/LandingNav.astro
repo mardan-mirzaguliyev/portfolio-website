@@ -10,34 +10,48 @@ const navLinks = [
 <header id="landing-nav" class="landing-nav fixed inset-x-0 top-0 z-50" data-scrolled="false" data-hidden="false" data-open="false">
   <nav class="landing-nav__bar flex items-center justify-between px-6 sm:px-10 lg:px-16" aria-label="Main navigation">
 
-    <a href="#top" class="font-display text-[15px] font-semibold tracking-tight text-white" aria-label="Back to top">
+    <a href="#top" class="font-display text-[15px] font-semibold tracking-tight text-ink" aria-label="Back to top">
       mmardan<span class="text-brand">.</span>
     </a>
 
     <ul class="hidden md:flex items-center gap-10" role="list">
       {navLinks.map(({ label, href }) => (
         <li>
-          <a href={href} class="roll-link text-[13px] font-medium tracking-wide text-white/70 hover:text-white">
+          <a href={href} class="roll-link text-[13px] font-medium tracking-wide text-ink/70 hover:text-ink">
             <span class="roll-link__inner" data-text={label}>{label}</span>
           </a>
         </li>
       ))}
     </ul>
 
-    <a href="#contact" class="nav-pill hidden md:inline-flex" data-magnetic>
-      <span class="nav-pill__dot" aria-hidden="true"></span>
-      Let's talk
-    </a>
+    <div class="flex items-center gap-3 sm:gap-4">
+      <button type="button" class="theme-switch" role="switch" aria-checked="false" aria-label="Night mode" data-theme-switch>
+        <span class="theme-switch__knob" aria-hidden="true">
+          <svg class="theme-switch__icon theme-switch__icon--sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <circle cx="12" cy="12" r="4" />
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
+          </svg>
+          <svg class="theme-switch__icon theme-switch__icon--moon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
+          </svg>
+        </span>
+      </button>
 
-    <button
-      id="landing-menu-btn"
-      class="md:hidden relative h-10 w-10 -mr-2 flex items-center justify-center text-white"
-      aria-label="Open menu"
-      aria-expanded="false"
-      aria-controls="landing-menu"
-    >
-      <span class="menu-icon" aria-hidden="true"><span></span><span></span></span>
-    </button>
+      <a href="#contact" class="nav-pill hidden md:inline-flex" data-magnetic>
+        <span class="nav-pill__dot" aria-hidden="true"></span>
+        Let's talk
+      </a>
+
+      <button
+        id="landing-menu-btn"
+        class="md:hidden relative h-10 w-10 -mr-2 flex items-center justify-center text-ink"
+        aria-label="Open menu"
+        aria-expanded="false"
+        aria-controls="landing-menu"
+      >
+        <span class="menu-icon" aria-hidden="true"><span></span><span></span></span>
+      </button>
+    </div>
   </nav>
 
   <!-- Mobile full-screen menu -->
@@ -84,6 +98,42 @@ const navLinks = [
   }
 
   btn.addEventListener('click', () => setOpen(nav.dataset.open !== 'true'));
+
+  // Night mode — shares the 'theme' key with the rest of the site
+  const root     = document.documentElement;
+  const switches = document.querySelectorAll<HTMLElement>('[data-theme-switch]');
+
+  const syncSwitches = () => {
+    const dark = root.classList.contains('dark');
+    switches.forEach((s) => s.setAttribute('aria-checked', String(dark)));
+  };
+
+  function setTheme(dark: boolean, origin: HTMLElement) {
+    const apply = () => {
+      root.classList.toggle('dark', dark);
+      try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch {}
+      syncSwitches();
+    };
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!('startViewTransition' in document) || reduceMotion) return apply();
+
+    // New theme spreads out in a circle from the switch
+    const r = origin.getBoundingClientRect();
+    const x = r.left + r.width / 2;
+    const y = r.top + r.height / 2;
+    const radius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+
+    document.startViewTransition(apply).ready.then(() => {
+      root.animate(
+        { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`] },
+        { duration: 1000, easing: 'cubic-bezier(0.25, 1, 0.5, 1)', pseudoElement: '::view-transition-new(root)' },
+      );
+    });
+  }
+
+  switches.forEach((s) => s.addEventListener('click', () => setTheme(!root.classList.contains('dark'), s)));
+  syncSwitches();
   menu.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => setOpen(false)));
   window.addEventListener('keydown', (e) => { if (e.key === 'Escape') setOpen(false); });
 </script>

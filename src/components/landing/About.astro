@@ -16,12 +16,12 @@ const links = [
 ];
 ---
 
-<section id="about" class="relative scroll-mt-20 bg-black px-6 pb-40 sm:px-10 sm:pb-56 lg:px-16">
+<section id="about" class="relative scroll-mt-20 bg-paper px-6 pb-40 sm:px-10 sm:pb-56 lg:px-16">
   <div class="grid items-start gap-16 lg:grid-cols-12 lg:gap-10">
 
     <!-- ── Left: portrait ─────────────────────────────── -->
     <figure class="lg:col-span-5">
-      <div class="portrait reveal-clip relative aspect-[4/5] overflow-hidden bg-neutral-900">
+      <div class="portrait reveal-clip relative aspect-[4/5] overflow-hidden bg-ink/[0.06]">
         {portrait ? (
           <Image
             src={portrait}
@@ -48,23 +48,23 @@ const links = [
 
       <h2 class="reveal font-display text-[clamp(2.25rem,4.5vw,4.25rem)] font-semibold leading-[1] tracking-[-0.045em]">
         Analyst by training.<br />
-        <span class="text-white/35">Storyteller by instinct.</span>
+        <span class="text-ink/35">Storyteller by instinct.</span>
       </h2>
 
-      <div class="reveal mt-10 max-w-xl space-y-6 text-lg leading-relaxed text-white/60" style="--reveal-delay:100ms">
+      <div class="reveal mt-10 max-w-xl space-y-6 text-lg leading-relaxed text-ink/60" style="--reveal-delay:100ms">
         <p>
           I'm a Data Analyst working across data visualisation, text mining and open-source tooling.
           Most of my work happens in R — cleaning messy sources, modelling what's inside them, and
           designing plots that hold up to scrutiny.
         </p>
         <p>
-          On the side I write <em class="text-white/85 not-italic">The Narratives in Graphs</em>, a
+          On the side I write <em class="text-ink/85 not-italic">The Narratives in Graphs</em>, a
           publication that reads song lyrics, film scripts and literature as data — tracing the
           emotional arcs hidden between the lines.
         </p>
       </div>
 
-      <ul class="reveal mt-16 border-t border-white/10" role="list" style="--reveal-delay:200ms">
+      <ul class="reveal mt-16 border-t border-ink/10" role="list" style="--reveal-delay:200ms">
         {links.map(({ label, handle, href }) => (
           <li>
             <a href={href} target="_blank" rel="noopener noreferrer" class="link-row">

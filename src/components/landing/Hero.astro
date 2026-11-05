@@ -2,7 +2,7 @@
 const headline = ['Mardan', 'Mirzaguliyev'];
 ---
 
-<section id="top" class="hero relative isolate h-[100svh] min-h-[600px] w-full overflow-hidden bg-black" data-hero>
+<section id="top" class="hero relative isolate h-[100svh] min-h-[600px] w-full overflow-hidden bg-paper" data-hero>
 
   <!-- Abstract gradient field — moves at a slower rate than the page (parallax) -->
   <div class="hero-bg" data-parallax-bg aria-hidden="true">
@@ -19,12 +19,12 @@ const headline = ['Mardan', 'Mirzaguliyev'];
   <!-- Each element enters on its own --d delay for a staggered load sequence -->
   <div class="hero-content relative z-10 flex h-full flex-col justify-end px-6 pb-8 sm:px-10 sm:pb-12 lg:px-16" data-parallax-content>
 
-    <p class="hero-enter eyebrow mb-8 flex items-center gap-4 !text-white/60" style="--d:150ms">
-      <span class="h-px w-10 bg-white/40" aria-hidden="true"></span>
+    <p class="hero-enter eyebrow mb-8 flex items-center gap-4 !text-ink/60" style="--d:150ms">
+      <span class="h-px w-10 bg-ink/40" aria-hidden="true"></span>
       Data Analyst — Azerbaijan
     </p>
 
-    <h1 class="font-display font-semibold text-white leading-[0.86] tracking-[-0.055em] text-[clamp(3rem,12.5vw,13rem)]">
+    <h1 class="font-display font-semibold text-ink leading-[0.86] tracking-[-0.055em] text-[clamp(3rem,12.5vw,13rem)]">
       {headline.map((line, i) => (
         <span class="hero-enter block pb-[0.06em] -mb-[0.06em]" style={`--d:${300 + i * 120}ms`}>
           {line}{i === headline.length - 1 && <span class="text-brand">.</span>}
@@ -34,7 +34,7 @@ const headline = ['Mardan', 'Mirzaguliyev'];
 
     <div class="relative mt-10 sm:mt-14 flex items-end justify-between gap-8 pt-6">
       <span class="hero-rule" style="--d:560ms" aria-hidden="true"></span>
-      <p class="hero-enter max-w-md text-base sm:text-lg leading-relaxed text-white/70" style="--d:660ms">
+      <p class="hero-enter max-w-md text-base sm:text-lg leading-relaxed text-ink/70" style="--d:660ms">
         I turn text, numbers and noise into clear visual narratives — where data science meets design.
       </p>
       <a href="#intro" class="hero-enter scroll-cue shrink-0" style="--d:800ms" aria-label="Scroll to content">

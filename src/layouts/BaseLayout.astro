@@ -33,24 +33,23 @@ const pageTitle = title === 'Home' ? 'Mardan Mirzaguliyev — Data Analyst' : `$
 ---
 
 <!doctype html>
-<html lang="en" class={isLanding ? 'landing' : 'dark'}>
+<html lang="en" class:list={[isLanding && 'landing']}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    {isLanding ? (
+    <!-- BLOCKING theme script — runs before first paint to prevent flash.
+         Day (#eff0e4) is the default; night only when the visitor has chosen it. -->
+    <script is:inline>
+      (function () {
+        var stored = null;
+        try { stored = localStorage.getItem('theme'); } catch (e) {}
+        document.documentElement.classList.toggle('dark', stored === 'dark');
+      })();
+    </script>
+    {isLanding && (
       <!-- Flags JS support so scroll-reveal styles only hide content when they can un-hide it -->
       <script is:inline>document.documentElement.classList.add('js');</script>
-    ) : (
-      <!-- BLOCKING theme script — runs before first paint to prevent flash -->
-      <script is:inline>
-        (function () {
-          var stored = localStorage.getItem('theme');
-          var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-          var dark = stored === 'dark' || (!stored && prefersDark);
-          document.documentElement.classList.toggle('dark', dark);
-        })();
-      </script>
     )}
 
     <!-- Primary meta -->
@@ -86,7 +85,7 @@ const pageTitle = title === 'Home' ? 'Mardan Mirzaguliyev — Data Analyst' : `$
 
   <body class:list={[
     'min-h-screen',
-    isLanding ? 'bg-black text-white' : 'flex flex-col text-zinc-900 dark:text-zinc-100',
+    isLanding ? 'bg-paper text-ink' : 'flex flex-col text-zinc-900 dark:text-zinc-100',
   ]}>
 
     <!--

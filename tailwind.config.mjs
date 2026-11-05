@@ -11,6 +11,9 @@ export default {
       },
       colors: {
         brand: '#015FFC',
+        // Theme-aware page colours — RGB triplets set in global.css / landing.css
+        paper: 'rgb(var(--paper) / <alpha-value>)',
+        ink:   'rgb(var(--ink) / <alpha-value>)',
         surface: {
           50:  'rgb(var(--color-surface-50) / <alpha-value>)',
           100: 'rgb(var(--color-surface-100) / <alpha-value>)',

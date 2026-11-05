@@ -16,6 +16,8 @@
     --color-accent-400:  167 139 250;
     --color-accent-500:  139 92 246;
     --color-accent-600:  124 58 237;
+    --paper: 239 240 228; /* #eff0e4 */
+    --ink:   20 20 18;
   }
 
   html {
@@ -24,7 +26,7 @@
 
   /* Light mode canvas */
   body {
-    @apply bg-zinc-50 text-zinc-800 font-sans;
+    @apply bg-paper text-zinc-800 font-sans;
     transition: background-color 0.3s ease, color 0.3s ease;
   }
 
