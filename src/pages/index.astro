@@ -6,7 +6,7 @@ import Hero from '../components/landing/Hero.astro';
 import Intro from '../components/landing/Intro.astro';
 import About from '../components/landing/About.astro';
 import FeaturedWork from '../components/landing/FeaturedWork.astro';
-import Achievements from '../components/landing/Achievements.astro';
+import Certifications from '../components/landing/Certifications.astro';
 import Contact from '../components/landing/Contact.astro';
 import '../styles/landing.css';
 
@@ -22,7 +22,7 @@ const featured = (await getCollection('projects'))
   <Intro />
   <About />
   <FeaturedWork projects={featured} />
-  <Achievements />
+  <Certifications />
   <Contact />
 </BaseLayout>
 

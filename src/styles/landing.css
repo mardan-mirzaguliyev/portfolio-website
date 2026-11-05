@@ -871,4 +871,6 @@ html.landing ::-webkit-scrollbar-thumb { background: rgb(var(--ink) / 0.2); }
     transition-delay: 0ms !important;
   }
   .hero-blob { animation: none !important; }
+  /* Nav anchors jump instead of gliding */
+  html.landing { scroll-behavior: auto; }
 }
