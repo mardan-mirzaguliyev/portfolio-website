@@ -17,7 +17,6 @@ import Certifications from '../components/home/Certifications.astro';
 
 <script>
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const finePointer  = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
   const clamp = (v: number, min: number, max: number) => Math.min(max, Math.max(min, v));
 
   // ── Hero parallax + intro word highlight ───────────────────
@@ -70,15 +69,5 @@ import Certifications from '../components/home/Certifications.astro';
     window.addEventListener('scroll', requestFrame, { passive: true });
     window.addEventListener('resize', requestFrame);
     onFrame();
-  }
-
-  // ── Pointer micro-interactions (mouse only) ────────────────
-  if (finePointer && !reduceMotion) {
-    // Gradient field drifts gently against the cursor
-    hero?.addEventListener('pointermove', (e) => {
-      const r = hero.getBoundingClientRect();
-      hero.style.setProperty('--mx', String((e.clientX - r.left) / r.width - 0.5));
-      hero.style.setProperty('--my', String((e.clientY - r.top) / r.height - 0.5));
-    });
   }
 </script>

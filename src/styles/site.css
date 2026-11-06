@@ -152,21 +152,33 @@ body { background: rgb(var(--paper)); }
 [data-open='true'] .menu-icon span:first-child { top: 4px; transform: rotate(45deg); }
 [data-open='true'] .menu-icon span:last-child  { top: 4px; transform: rotate(-45deg); }
 
+/* Mobile drawer: drops in under the bar (the header sits above it at z-index 60) */
 .site-menu {
   position: fixed;
-  inset: 4rem 0 0 0;
+  inset: 0;
+  z-index: 50;
   display: flex;
-  align-items: flex-end;
-  padding-bottom: 3rem;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 6rem 0 3rem;
+  overflow-y: auto;
   background: rgb(var(--paper));
   visibility: hidden;
   opacity: 0;
-  transition: opacity 0.5s var(--ease-out), visibility 0s linear 0.5s;
+  transform: translateY(-1.5rem);
+  transition:
+    opacity 0.5s var(--ease-out),
+    transform 0.7s var(--ease-out),
+    visibility 0s linear 0.7s;
 }
-[data-open='true'] .site-menu { visibility: visible; opacity: 1; transition-delay: 0s; }
+/* site.css loads after Tailwind's utilities, so md:hidden alone loses to the display above */
+@media (min-width: 768px) { .site-menu { display: none; } }
+.site-menu[data-open='true'] { visibility: visible; opacity: 1; transform: none; transition-delay: 0s; }
+.site-menu__list { border-top: 1px solid rgb(var(--ink) / 0.1); }
 .site-menu__link {
   display: block;
-  font-size: clamp(2.75rem, 14vw, 5rem);
+  padding: 0.85rem 0;
+  font-size: clamp(2.5rem, 12vw, 4.5rem);
   font-weight: 600;
   line-height: 1.05;
   letter-spacing: -0.05em;
@@ -175,7 +187,7 @@ body { background: rgb(var(--paper)); }
   transition: transform 0.8s var(--ease-out), color 0.3s;
   transition-delay: calc(var(--i) * 60ms);
 }
-[data-open='true'] .site-menu__link { transform: none; }
+.site-menu[data-open='true'] .site-menu__link { transform: none; transition-delay: calc(120ms + var(--i) * 60ms); }
 .site-menu__link:active { color: var(--brand); }
 .site-menu__link[aria-current='page'] { color: var(--brand); }
 
@@ -206,48 +218,9 @@ body { background: rgb(var(--paper)); }
 .hero-bg {
   position: absolute;
   inset: -12% -6%;
-  background:
-    radial-gradient(120% 80% at 50% 115%, var(--hero-glow) 0%, transparent 60%),
-    rgb(var(--paper));
+  background: rgb(var(--paper));
   will-change: transform;
 }
-.hero-blobs {
-  position: absolute;
-  inset: 0;
-  transform: translate3d(calc(var(--mx, 0) * -36px), calc(var(--my, 0) * -36px), 0);
-  transition: transform 1.6s var(--ease-out);
-  /* Uses the standalone scale property so it composes with the pointer-drift transform */
-  animation: hero-bg-enter 2.6s var(--ease-smooth) both;
-}
-@keyframes hero-bg-enter { from { opacity: 0; scale: 1.12; } }
-.hero-blob { position: absolute; border-radius: 50%; mix-blend-mode: var(--blob-blend); opacity: var(--blob-opacity); will-change: transform; }
-
-/* Light glows on black at night; soft pigment on paper by day */
-:root { --hero-glow: rgb(1 95 252 / 0.16); --blob-blend: multiply; --blob-opacity: 0.62; }
-.dark { --hero-glow: #021a52;              --blob-blend: screen;   --blob-opacity: 1; }
-.hero-blob--1 {
-  width: 72vmax; height: 72vmax; left: -18vmax; top: -26vmax;
-  background: radial-gradient(circle, rgb(1 95 252 / 0.95) 0%, rgb(1 95 252 / 0) 62%);
-  animation: drift-a 26s var(--ease-in-out) infinite alternate;
-}
-.hero-blob--2 {
-  width: 60vmax; height: 60vmax; right: -20vmax; top: -6vmax;
-  background: radial-gradient(circle, rgb(88 44 255 / 0.75) 0%, rgb(88 44 255 / 0) 60%);
-  animation: drift-b 32s var(--ease-in-out) infinite alternate;
-}
-.hero-blob--3 {
-  width: 52vmax; height: 52vmax; left: 18vw; bottom: -30vmax;
-  background: radial-gradient(circle, rgb(0 190 255 / 0.55) 0%, rgb(0 190 255 / 0) 60%);
-  animation: drift-c 28s var(--ease-in-out) infinite alternate;
-}
-.hero-blob--4 {
-  width: 34vmax; height: 34vmax; right: 8vw; bottom: -4vmax;
-  background: radial-gradient(circle, rgb(214 60 255 / 0.32) 0%, rgb(214 60 255 / 0) 62%);
-  animation: drift-b 22s var(--ease-in-out) infinite alternate-reverse;
-}
-@keyframes drift-a { to { transform: translate3d(14vw, 10vh, 0) scale(1.15); } }
-@keyframes drift-b { to { transform: translate3d(-16vw, 14vh, 0) scale(0.9); } }
-@keyframes drift-c { to { transform: translate3d(10vw, -18vh, 0) scale(1.2); } }
 
 .hero-grain {
   position: absolute;
@@ -289,7 +262,7 @@ body { background: rgb(var(--paper)); }
 @keyframes hero-rule { to { transform: scaleX(1); } }
 
 /* Hold the sequence until web fonts are ready so nothing reflows mid-animation */
-.js:not(.is-loaded) :is(.hero-enter, .hero-rule, .hero-blobs, .site-nav__bar) {
+.js:not(.is-loaded) :is(.hero-enter, .hero-rule, .site-nav__bar) {
   animation-play-state: paused;
 }
 
@@ -858,17 +831,6 @@ body { background: rgb(var(--paper)); }
 
 
 /* ─── CONTACT ───────────────────────────────────────────────── */
-.contact-glow {
-  position: absolute;
-  z-index: -1;
-  left: 50%; bottom: -30vmax;
-  width: 90vmax; height: 60vmax;
-  transform: translateX(-50%);
-  border-radius: 50%;
-  background: radial-gradient(closest-side, rgb(1 95 252 / 0.28), transparent);
-  pointer-events: none;
-}
-
 /* Doubled class beats @tailwindcss/forms' [type='text'] base styles */
 .contact-form .field { position: relative; padding-top: 1.75rem; }
 .contact-form .field__input {
@@ -962,7 +924,6 @@ body { background: rgb(var(--paper)); }
     transition-duration: 0.01ms !important;
     transition-delay: 0ms !important;
   }
-  .hero-blob { animation: none !important; }
   /* Nav anchors jump instead of gliding; pages swap without the cross-fade */
   html { scroll-behavior: auto; }
   ::view-transition-group(*),

@@ -11,7 +11,7 @@ const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 const isActive = (href: string) => (href === '/' ? path === '/' : path === href || path.startsWith(`${href}/`));
 ---
 
-<header id="site-nav" class="site-nav fixed inset-x-0 top-0 z-50" data-scrolled="false" data-hidden="false" data-open="false">
+<header id="site-nav" class="site-nav fixed inset-x-0 top-0 z-[60]" data-scrolled="false" data-hidden="false" data-open="false">
   <nav class="site-nav__bar flex items-center justify-between px-6 sm:px-10 lg:px-16" aria-label="Main navigation">
 
     <a href="/" class="font-display text-[15px] font-semibold tracking-tight text-ink" aria-label="mmardan — Home">
@@ -53,28 +53,30 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path === href 
         aria-label="Open menu"
         aria-expanded="false"
         aria-controls="site-menu"
+        type="button"
       >
         <span class="menu-icon" aria-hidden="true"><span></span><span></span></span>
       </button>
     </div>
   </nav>
-
-  <!-- Mobile full-screen menu -->
-  <div id="site-menu" class="site-menu md:hidden" aria-label="Mobile navigation">
-    <ul class="flex flex-col gap-2 px-6 sm:px-10" role="list">
-      {navLinks.map(({ label, href }, i) => (
-        <li class="overflow-hidden">
-          <a
-            href={href}
-            class="site-menu__link font-display"
-            style={`--i:${i}`}
-            aria-current={isActive(href) ? 'page' : undefined}
-          >{label}</a>
-        </li>
-      ))}
-    </ul>
-  </div>
 </header>
+
+<!-- Mobile drawer. Kept outside the header: once scrolled, the header's backdrop-filter makes it the
+     containing block for fixed children, which collapsed the menu to the bar's height. -->
+<nav id="site-menu" class="site-menu md:hidden" data-open="false" aria-label="Mobile navigation" inert>
+  <ul class="site-menu__list px-6 sm:px-10" role="list">
+    {navLinks.map(({ label, href }, i) => (
+      <li class="overflow-hidden border-b border-ink/10">
+        <a
+          href={href}
+          class="site-menu__link font-display"
+          style={`--i:${i}`}
+          aria-current={isActive(href) ? 'page' : undefined}
+        >{label}</a>
+      </li>
+    ))}
+  </ul>
+</nav>
 
 <script>
   const nav  = document.getElementById('site-nav')!;
@@ -100,14 +102,25 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path === href 
   }, { passive: true });
   update();
 
-  function setOpen(open: boolean) {
+  const isOpen = () => nav.dataset.open === 'true';
+
+  function setOpen(open: boolean, { restoreFocus = false } = {}) {
+    if (open === isOpen()) return;
     nav.dataset.open = String(open);
+    menu.dataset.open = String(open);
+    menu.inert = !open;
+    if (open) nav.dataset.hidden = 'false';
     btn.setAttribute('aria-expanded', String(open));
     btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
     document.documentElement.style.overflow = open ? 'hidden' : '';
+    if (!open && restoreFocus) btn.focus();
   }
 
-  btn.addEventListener('click', () => setOpen(nav.dataset.open !== 'true'));
+  btn.addEventListener('click', () => setOpen(!isOpen()));
+  menu.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => setOpen(false)));
+  window.addEventListener('keydown', (e) => { if (e.key === 'Escape' && isOpen()) setOpen(false, { restoreFocus: true }); });
+  // Growing past the md breakpoint hides the drawer, so don't leave the page scroll-locked behind it
+  window.matchMedia('(min-width: 768px)').addEventListener('change', (e) => { if (e.matches) setOpen(false); });
 
   // Night mode — persisted under the 'theme' key, read before first paint in BaseLayout
   const root     = document.documentElement;
@@ -148,6 +161,4 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path === href 
 
   switches.forEach((s) => s.addEventListener('click', () => setTheme(!root.classList.contains('dark'), s)));
   syncSwitches();
-  menu.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => setOpen(false)));
-  window.addEventListener('keydown', (e) => { if (e.key === 'Escape') setOpen(false); });
 </script>
