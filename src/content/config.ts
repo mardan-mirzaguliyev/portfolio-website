@@ -42,6 +42,8 @@ const projects = defineCollection({
     liveUrl: optional(z.string().url()),
     repositoryUrl: optional(z.string().url()),
     logo: optional(image()),
+    /** PDF under public/, e.g. '/assets/docs/lesson-plan.pdf' — embedded on the project page and linked from the card */
+    document: optional(z.string().regex(/^\/.+\.pdf$/i, 'Use a site path ending in .pdf, e.g. /assets/docs/file.pdf')),
     pubDate: optional(z.coerce.date()),
   }),
 });

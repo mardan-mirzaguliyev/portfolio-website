@@ -102,6 +102,12 @@ collections:
         widget: string
         required: false
         pattern: ['^https?://.+', 'Must start with http:// or https://']
+      - label: Document (PDF)
+        name: document
+        widget: string
+        required: false
+        hint: Path to a PDF in public/, e.g. /assets/docs/lesson-plan.pdf — embedded on the project page
+        pattern: ['^/.+\.pdf$', 'Must be a site path ending in .pdf, e.g. /assets/docs/file.pdf']
       - { label: Featured, name: featured, widget: boolean, default: false }
       - { label: Case Study, name: body, widget: markdown, required: false }
 

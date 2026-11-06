@@ -10,13 +10,15 @@ interface Props {
   href: string;
   liveUrl?: string;
   repositoryUrl?: string;
+  /** PDF under public/ — linked from the footer */
+  documentUrl?: string;
   featured?: boolean;
   logo?: ImageMetadata;
   /** Position in the grid — picks one of three abstract artworks for cards without a logo */
   index?: number;
 }
 
-const { title, description, tags, href, liveUrl, repositoryUrl, featured, logo, index = 0 } = Astro.props;
+const { title, description, tags, href, liveUrl, repositoryUrl, documentUrl, featured, logo, index = 0 } = Astro.props;
 ---
 
 <article class="work-card group">
@@ -49,11 +51,16 @@ const { title, description, tags, href, liveUrl, repositoryUrl, featured, logo, 
     {tags.map((tag) => <li class="chip">{tag}</li>)}
   </ul>
 
-  {(liveUrl || repositoryUrl) && (
+  {(liveUrl || repositoryUrl || documentUrl) && (
     <div class="relative z-10 mt-6 flex items-center gap-6 border-t border-ink/10 pt-5">
       {liveUrl && (
         <a href={liveUrl} target="_blank" rel="noopener noreferrer" class="text-link" aria-label={`${title} live site (opens in a new tab)`}>
           Live site ↗
+        </a>
+      )}
+      {documentUrl && (
+        <a href={documentUrl} target="_blank" rel="noopener noreferrer" class="text-link" aria-label={`${title} PDF (opens in a new tab)`}>
+          View PDF ↗
         </a>
       )}
       {repositoryUrl && (

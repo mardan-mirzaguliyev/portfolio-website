@@ -760,20 +760,6 @@ body { background: rgb(var(--paper)); }
 }
 
 
-/* ─── PROJECTS: tag filter ──────────────────────────────────── */
-.filter-pill {
-  padding: 0.45rem 0.9rem;
-  border: 1px solid rgb(var(--ink) / 0.15);
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 500;
-  color: rgb(var(--ink) / 0.7);
-  transition: color 0.3s var(--ease-out), border-color 0.3s var(--ease-out), background-color 0.3s var(--ease-out);
-}
-.filter-pill:hover { color: rgb(var(--ink)); border-color: rgb(var(--ink) / 0.4); }
-.filter-pill[aria-pressed='true'] { background: var(--brand); border-color: var(--brand); color: #fff; }
-
-
 /* ─── BLOG ──────────────────────────────────────────────────── */
 .post-row {
   display: grid;
@@ -822,6 +808,86 @@ body { background: rgb(var(--paper)); }
   transition: opacity 0.6s var(--ease-out);
 }
 .newsletter-card:hover { border-color: rgb(1 95 252 / 0.45); transform: translateY(-4px); }
+
+
+/* ─── SERVICES ──────────────────────────────────────────────── */
+.service-card {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  overflow: hidden;
+  padding: 2rem;
+  border: 1px solid rgb(var(--ink) / 0.1);
+  border-top-color: rgb(var(--ink) / 0.15);
+  background: rgb(var(--ink) / 0.02);
+  transition:
+    transform 0.8s var(--ease-smooth),
+    border-color 0.5s var(--ease-out),
+    box-shadow 0.8s var(--ease-smooth);
+}
+@media (min-width: 640px) { .service-card { padding: 2.25rem; } }
+/* Faint purple wash fades in from the corner on hover */
+.service-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(90% 70% at 100% 0%, rgb(88 44 255 / 0.08), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.6s var(--ease-out);
+}
+.service-card:hover {
+  transform: translateY(-4px);
+  border-color: rgb(var(--ink) / 0.18);
+  box-shadow: 0 24px 48px -28px rgb(var(--ink) / 0.25);
+}
+.service-card:hover::before { opacity: 1; }
+.service-card__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem; height: 3rem;
+  border: 1px solid rgb(var(--ink) / 0.12);
+  border-radius: 50%;
+  color: var(--brand);
+}
+.service-card__icon svg { width: 20px; height: 20px; }
+
+/* Same soft purple-to-blue wash as the newsletter card */
+.services-cta {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: clamp(3rem, 7vw, 5.5rem) clamp(1.5rem, 5vw, 4rem);
+  border: 1px solid rgb(var(--ink) / 0.1);
+  text-align: center;
+}
+.services-cta::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(60% 90% at 100% 0%, rgb(88 44 255 / 0.12), transparent 70%),
+    radial-gradient(50% 80% at 0% 100%, rgb(1 95 252 / 0.08), transparent 70%);
+}
+.services-cta__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 1rem 1.75rem;
+  border-radius: 999px;
+  background: var(--brand);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.4s var(--ease-out), color 0.4s var(--ease-out), transform 0.5s var(--ease-out);
+}
+.services-cta__btn svg { width: 16px; height: 16px; transition: transform 0.5s var(--ease-out); }
+.services-cta__btn:hover { background: rgb(var(--ink)); color: rgb(var(--paper)); transform: translateY(-2px); }
+.services-cta__btn:hover svg { transform: translateX(4px); }
 
 
 /* ─── ARTICLE (blog posts & project case studies) ───────────── */

@@ -8,31 +8,22 @@ import ProjectCard from '../../components/ProjectCard.astro';
 const projects = (await getCollection('projects')).sort(
   (a, b) => Number(b.data.featured) - Number(a.data.featured) || a.data.title.localeCompare(b.data.title),
 );
-
-const allTags = [...new Set(projects.flatMap((p) => p.data.tags))].sort();
 ---
 
 <BaseLayout
   title="Projects"
-  description="Data analysis, text mining and full-stack web projects by Mardan Mirzaguliyev."
+  description="Data analysis, text mining, web development and teaching projects by Mardan Mirzaguliyev."
 >
   <section class="px-6 pb-32 pt-36 sm:px-10 sm:pb-40 sm:pt-44 lg:px-16">
     <PageHeader
       eyebrow="Projects — Work"
       title="Selected work"
-      lead={`${projects.length} projects across data analysis, text mining and full-stack web development.`}
+      lead={`${projects.length} projects across data analysis, text mining, web development and English teaching.`}
     />
-
-    <div class="reveal mb-14 flex flex-wrap gap-2" role="group" aria-label="Filter projects by technology">
-      <button type="button" class="filter-pill" data-filter="all" aria-pressed="true">All</button>
-      {allTags.map((tag) => (
-        <button type="button" class="filter-pill" data-filter={tag} aria-pressed="false">{tag}</button>
-      ))}
-    </div>
 
     <ul class="grid gap-x-8 gap-y-20 md:grid-cols-2 lg:grid-cols-3" role="list">
       {projects.map((project, i) => (
-        <li class="reveal" data-tags={project.data.tags.join('|')} style={`--reveal-delay:${(i % 3) * 120}ms`}>
+        <li class="reveal" style={`--reveal-delay:${(i % 3) * 120}ms`}>
           <ProjectCard
             title={project.data.title}
             description={project.data.description}
@@ -40,6 +31,7 @@ const allTags = [...new Set(projects.flatMap((p) => p.data.tags))].sort();
             href={`/projects/${project.slug}`}
             liveUrl={project.data.liveUrl}
             repositoryUrl={project.data.repositoryUrl}
+            documentUrl={project.data.document}
             featured={project.data.featured}
             logo={project.data.logo}
             index={i}
@@ -48,32 +40,6 @@ const allTags = [...new Set(projects.flatMap((p) => p.data.tags))].sort();
       ))}
     </ul>
 
-    <p class="mt-16 hidden text-ink/55" data-empty>No projects with that tag yet.</p>
   </section>
 </BaseLayout>
 
-<script>
-  const buttons = document.querySelectorAll<HTMLButtonElement>('[data-filter]');
-  const items   = document.querySelectorAll<HTMLElement>('[data-tags]');
-  const empty   = document.querySelector<HTMLElement>('[data-empty]');
-
-  buttons.forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const tag = btn.dataset.filter!;
-      buttons.forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
-
-      let shown = 0;
-      items.forEach((item) => {
-        const match = tag === 'all' || item.dataset.tags!.split('|').includes(tag);
-        item.hidden = !match;
-        if (match) {
-          shown++;
-          // Filtered-in cards may never have scrolled into view — show them straight away
-          item.classList.add('is-visible');
-          item.querySelector('.reveal-clip')?.classList.add('is-visible');
-        }
-      });
-      empty?.classList.toggle('hidden', shown > 0);
-    });
-  });
-</script>
